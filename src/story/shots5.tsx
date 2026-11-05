@@ -18,6 +18,13 @@ import {Steam, Words} from './shots2';
 
 /* ===== Parts 10–11 (lines 159–187). Plate = 0 all the way. Plates ≥ 60 px from the edge. ===== */
 const k = kk;
+const Sepia: React.FC = () => (
+	<Screen>
+		<rect x={0} y={0} width={1920} height={1080} fill="#9a6a2a" opacity={0.26} />
+		<rect x={40} y={40} width={1840} height={1000} rx={30} fill="none" stroke="#ffd34a" strokeWidth={8} opacity={0.7} />
+		<Plaque x={1560} y={150} w={520} h={110} text="ВСПОМИНАЕШЬ" size={56} c="#ffd34a" />
+	</Screen>
+);
 const CUPS: [number, string][] = [[860, '#f2b21c'], [1060, '#3a6fd2'], [1260, '#3a6fd2']];
 const TableK: React.FC<{f: number; steam?: number}> = ({f, steam = 1}) => (
 	<Svg>
@@ -282,41 +289,48 @@ const X6: React.FC = () => {
 
 const Dial: React.FC<{x: number; y: number; r: number; h: number; m: number; c?: string; glow?: boolean}> = ({x, y, r, h, m, c = '#ffd34a', glow}) => (
 	<g transform={`translate(${x},${y})`}>
-		{glow ? <circle r={r + 30} fill="#ffb347" opacity={0.35} style={{filter: 'blur(14px)'}} /> : null}
-		<circle r={r} fill="#11142c" stroke={c} strokeWidth={Math.max(5, r / 10)} />
-		<line x1={0} y1={0} x2={Math.sin((((h % 12) + m / 60) * Math.PI) / 6) * r * 0.5} y2={-Math.cos((((h % 12) + m / 60) * Math.PI) / 6) * r * 0.5} stroke="#fff" strokeWidth={Math.max(5, r / 9)} strokeLinecap="round" />
-		<line x1={0} y1={0} x2={Math.sin((m * Math.PI) / 30) * r * 0.78} y2={-Math.cos((m * Math.PI) / 30) * r * 0.78} stroke={c} strokeWidth={Math.max(4, r / 12)} strokeLinecap="round" />
-		<circle r={Math.max(4, r / 12)} fill={c} />
+		{glow ? <circle r={r + 40} fill="#ffb347" opacity={0.35} style={{filter: 'blur(18px)'}} /> : null}
+		<circle r={r} fill="#11142c" stroke={c} strokeWidth={Math.max(6, r / 9)} />
+		{Array.from({length: 12}).map((_, i) => (
+			<line key={i} x1={0} y1={-r * 0.86} x2={0} y2={-r * (i % 3 ? 0.78 : 0.7)} stroke="#8a92d8" strokeWidth={Math.max(3, r / 22)} transform={`rotate(${i * 30})`} />
+		))}
+		<line x1={0} y1={0} x2={Math.sin((((h % 12) + m / 60) * Math.PI) / 6) * r * 0.58} y2={-Math.cos((((h % 12) + m / 60) * Math.PI) / 6) * r * 0.58} stroke="#fff" strokeWidth={Math.max(8, r / 5)} strokeLinecap="round" />
+		<line x1={0} y1={0} x2={Math.sin((m * Math.PI) / 30) * r * 0.86} y2={-Math.cos((m * Math.PI) / 30) * r * 0.86} stroke={c} strokeWidth={Math.max(6, r / 7)} strokeLinecap="round" />
+		<circle r={Math.max(7, r / 8)} fill={c} />
 	</g>
 );
 
-/* ---- 168 · двадцать лет в 21:30 — и двадцать первый: 21:41 ---- */
+/* ---- 168 · двадцать лет в 21:30 — и двадцать первый отдельно: 21:41 ---- */
 const X7: React.FC = () => {
 	const {f} = useShot();
-	const shown = Math.min(20, Math.floor(f / 5.5));
-	const big = k(f, 130, 150);
-	const m = f < 120 ? 30 : interpolate(f, [120, 150], [30, 41], clamp);
+	const shown = Math.min(20, Math.floor(f / 3.5));
+	const dim = k(f, 78, 92);
+	const big = k(f, 84, 100);
+	const m = f < 100 ? 30 : interpolate(f, [100, 126], [30, 41], clamp);
 	return (
 		<Board tint="#141a48">
-			<g opacity={k(f, 2, 14)}>
-				<Plaque x={960} y={140} w={960} h={120} text="20 ЛЕТ ПОДРЯД: 21:30" size={72} c="#ffd34a" />
+			<g opacity={k(f, 2, 14) * (1 - dim)}>
+				<Plaque x={960} y={150} w={960} h={120} text="20 ЛЕТ ПОДРЯД: 21:30" size={72} c="#ffd34a" />
 			</g>
-			{Array.from({length: 20}).map((_, i) => {
-				const row = Math.floor(i / 10);
-				const col = i % 10;
-				return i < shown ? (
-					<g key={i}>
-						<Dial x={205 + col * 170} y={300 + row * 190} r={74} h={21} m={30} />
-						<text x={205 + col * 170} y={300 + row * 190 + 124} textAnchor="middle" fontSize={56} fontFamily={FONT} fontWeight={800} fill="#fff">
-							{i + 1}
-						</text>
-					</g>
-				) : null;
-			})}
-			<g opacity={big} transform={`translate(960,${790})`}>
-				<Dial x={0} y={0} r={130} h={21} m={m} c="#ffb347" glow />
-				<Plaque x={380} y={0} w={420} h={130} text="21:41" size={104} c="#ffb347" />
-				<Plaque x={-420} y={0} w={460} h={110} text="21-й год" size={76} c="#ffb347" />
+			<g opacity={1 - 0.8 * dim}>
+				{Array.from({length: 20}).map((_, i) => {
+					const row = Math.floor(i / 10);
+					const col = i % 10;
+					return i < shown ? (
+						<g key={i}>
+							<Dial x={205 + col * 170} y={330 + row * 230} r={76} h={21} m={30} />
+							<text x={205 + col * 170} y={330 + row * 230 + 128} textAnchor="middle" fontSize={56} fontFamily={FONT} fontWeight={800} fill="#fff">
+								{i + 1}
+							</text>
+						</g>
+					) : null;
+				})}
+			</g>
+			<g opacity={big}>
+				<rect x={0} y={0} width={1920} height={1080} fill="#141a48" opacity={0.0} />
+				<Plaque x={960} y={140} w={760} h={120} text="21-Й ГОД" size={80} c="#ffb347" />
+				<Dial x={960} y={520} r={230} h={21} m={m} c="#ffb347" glow />
+				<Plaque x={960} y={880} w={520} h={140} text="21:41" size={120} c="#ffb347" />
 			</g>
 		</Board>
 	);
@@ -324,18 +338,25 @@ const X7: React.FC = () => {
 
 /* ---- 169 · три гостя, три чашки: три руки берут чашки ---- */
 const X8: React.FC = () => {
-	const {f, gf} = useShot();
+	const {f} = useShot();
 	const take = (a: number) => k(f, a, a + 22);
-	const arm = (sx: number, sy: number, cx: number, a: number, c: string) => {
+	const arm = (sx: number, sy: number, cx: number, a: number, c: string, rot: number) => {
 		const t = take(a);
+		const hx = sx + (cx - sx) * t;
+		const hy = 690 - 150 * (1 - t) - 8 * t;
 		return (
 			<g>
-				<path d={`M${sx},${sy} L${sx + (cx - sx) * t},${690 - 60 * (1 - t) - 10 * t}`} stroke={c} strokeWidth={46} strokeLinecap="round" />
-				<circle cx={sx + (cx - sx) * t} cy={690 - 60 * (1 - t) - 10 * t} r={30} fill="#ffe0bd" stroke="#10132a" strokeWidth={5} />
+				<path d={`M${sx},${sy} L${hx},${hy}`} stroke="#10132a" strokeWidth={72} strokeLinecap="round" />
+				<path d={`M${sx},${sy} L${hx},${hy}`} stroke={c} strokeWidth={60} strokeLinecap="round" />
+				<g transform={`translate(${hx},${hy}) rotate(${rot})`}>
+					<circle r={44} fill="#ffe0bd" stroke="#10132a" strokeWidth={6} />
+					<ellipse cx={0} cy={-34} rx={14} ry={22} fill="#ffe0bd" stroke="#10132a" strokeWidth={5} />
+					<ellipse cx={30} cy={-18} rx={12} ry={20} fill="#ffe0bd" stroke="#10132a" strokeWidth={5} transform="rotate(35 30 -18)" />
+				</g>
 			</g>
 		);
 	};
-	const cam = camPath(f, [[0, camOn(1060, 640, 1.6)], [90, camOn(1060, 630, 1.9)]]);
+	const cam = camPath(f, [[0, camOn(1060, 650, 2.2)], [100, camOn(1060, 640, 2.4)]]);
 	return (
 		<Stage cam={cam} bg="#14152e" light={{x: 20, y: 10, o: 0.45}}>
 			<Layer depth={1.6}>
@@ -346,9 +367,9 @@ const X8: React.FC = () => {
 			</Layer>
 			<Layer depth={1}>
 				<Svg>
-					{arm(560, 560, 860, 20, '#2f6fd8')}
-					{arm(1060, 330, 1060, 44, '#d94a3a')}
-					{arm(1560, 560, 1260, 68, '#22a6a6')}
+					{arm(660, 620, 860, 14, '#2f6fd8', 70)}
+					{arm(1060, 330, 1060, 40, '#d94a3a', 0)}
+					{arm(1460, 620, 1260, 66, '#22a6a6', -70)}
 				</Svg>
 			</Layer>
 		</Stage>
@@ -421,8 +442,9 @@ const X10: React.FC = () => {
 /* ---- 175 · камера скользит по башне из кубиков и чашкам сестры ---- */
 const X11: React.FC = () => {
 	const {f} = useShot();
-	const cam = camPath(f, [[0, camOn(1000, 330, 1.9)], [105, camOn(520, 620, 1.9)]]);
+	const cam = camPath(f, [[0, camOn(1000, 330, 1.7, {farBlur: 1})], [105, camOn(520, 620, 1.7, {farBlur: 1})]]);
 	return (
+		<>
 		<Stage cam={cam} bg="#14152e" light={{x: 20, y: 10, o: 0.4}}>
 			<Layer depth={1.6}>
 				<KitchenK night />
@@ -439,6 +461,8 @@ const X11: React.FC = () => {
 				</Svg>
 			</Layer>
 		</Stage>
+		<Sepia />
+		</>
 	);
 };
 
@@ -656,10 +680,10 @@ const PhoneGrid: React.FC<{f: number; a184: number}> = ({f, a184}) => (
 			return (
 				<g key={i}>
 					<rect x={215 + c * 190} y={345 + r * 112} width={150} height={96} rx={18} fill={on ? '#fff6dc' : '#1c2150'} stroke={on ? '#ffd34a' : '#3a4180'} strokeWidth={4} />
-					<text x={235 + c * 190} y={404 + r * 112} fontSize={58} fontFamily={FONT} fontWeight={900} fill={on ? '#10132a' : '#7a84c8'}>
+					<text x={226 + c * 190} y={on ? 384 + r * 112 : 404 + r * 112} fontSize={on ? 40 : 58} fontFamily={FONT} fontWeight={900} fill={on ? '#10132a' : '#7a84c8'}>
 						{i + 1 > 31 ? i - 30 : i + 1}
 					</text>
-					{on ? <Ico k="knight" x={330 + c * 190} y={392 + r * 112} s={0.55} /> : null}
+					{on ? <Ico k="knight" x={290 + c * 190} y={398 + r * 112} s={0.98} /> : null}
 				</g>
 			);
 		})}
@@ -714,7 +738,8 @@ const Y8: React.FC = () => {
 /* ---- 187 · вопрос зрителю; под ним три чашки ---- */
 const Y9: React.FC = () => {
 	const {f} = useShot();
-	const cam = camPath(f, [[0, camOn(1060, 650, 1.35)], [200, camOn(1060, 630, 1.55)]]);
+	const flick = 0.1 + 0.07 * Math.sin(f / 5) + 0.05 * Math.sin(f / 2.3) + (Math.floor(f / 23) % 5 === 0 ? 0.08 : 0);
+	const cam = camPath(f, [[0, camOn(1060, 640, 1.2)], [120, camOn(1050, 620, 1.55)], [260, camOn(1050, 600, 1.95)]]);
 	return (
 		<>
 			<Stage cam={cam} bg="#0a0d24" light={false}>
@@ -722,11 +747,12 @@ const Y9: React.FC = () => {
 					<KitchenK night />
 					<Svg>
 						<rect x={-700} y={-400} width={3300} height={1500} fill="#02030f" opacity={0.78} />
-						<path d="M820,150 L1180,150 L1320,740 L700,740 Z" fill="#cfe0ff" opacity={0.12} />
+						<path d="M820,150 L1180,150 L1320,740 L700,740 Z" fill="#cfe0ff" opacity={flick} />
+						<rect x={830} y={170} width={340} height={230} fill="#dbe8ff" opacity={flick * 0.9} style={{filter: 'blur(10px)'}} />
 					</Svg>
 				</Layer>
 				<Layer depth={1.25}>
-					<TableK f={f} steam={0.0} />
+					<TableK f={f} steam={0} />
 				</Layer>
 			</Stage>
 			<Caption f={f} from={6} to={100000} top={90} lines={['К КОМУ ТЫ ЗАЙДЁШЬ', 'СЕГОДНЯ БЕЗ ЗВОНКА?']} size={104} />
