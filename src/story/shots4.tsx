@@ -24,15 +24,15 @@ const Sepia: React.FC = () => (
 		<Plaque x={1560} y={150} w={520} h={110} text="ВСПОМИНАЕШЬ" size={56} c="#ffd34a" />
 	</Screen>
 );
-const CHARRED = [1, 2, 3, 4, 6, 11, 12, 15, 18, 19, 20, 24, 25, 26];
-const Bunch: React.FC<{x: number; y: number; n: number; s?: number}> = ({x, y, n, s = 1}) => (
+export const CHARRED = [1, 2, 3, 4, 6, 11, 12, 15, 18, 19, 20, 24, 25, 26];
+export const Bunch: React.FC<{x: number; y: number; n: number; s?: number}> = ({x, y, n, s = 1}) => (
 	<g>
 		{Array.from({length: n}).map((_, r) =>
 			[-1, 0, 1].map((c) => <rect key={`${r}${c}`} x={x + (c * 56 + (r % 2) * 12 - 28) * s} y={y - (r + 1) * 56 * s} width={54 * s} height={54 * s} rx={4} fill={['#e2483a', '#3a6fd2', '#ffd34a', '#3aa37a', '#8b5cf6'][(r + c + 3) % 5]} stroke="#10132a" strokeWidth={3} />),
 		)}
 	</g>
 );
-const Mug: React.FC<{x: number; y: number; c: string; steam?: number; f?: number}> = ({x, y, c, steam = 0, f = 0}) => (
+export const Mug: React.FC<{x: number; y: number; c: string; steam?: number; f?: number}> = ({x, y, c, steam = 0, f = 0}) => (
 	<g transform={`translate(${x},${y})`}>
 		<rect x={-22} y={-40} width={44} height={44} rx={8} fill={c} stroke="#10132a" strokeWidth={3} />
 		<path d="M22,-30 q18,0 18,14 q0,14 -18,14" stroke={c} strokeWidth={7} fill="none" />
@@ -563,15 +563,15 @@ const W19: React.FC = () => {
 			<Badge />
 			{A ? (
 				<g>
-					<PhoneFrame x={560} y={560} w={560} h={720}>
-						<Mini x={0} y={-190} c="#2f6fd8" hair="#5a3a22" s={2.2} />
-						<text y={20} textAnchor="middle" fontSize={84} fontFamily={FONT} fontWeight={900} fill="#fff">
+					<PhoneFrame x={600} y={560} w={720} h={740}>
+						<Mini x={0} y={-200} c="#2f6fd8" hair="#5a3a22" s={2.2} />
+						<text y={10} textAnchor="middle" fontSize={92} fontFamily={FONT} fontWeight={900} fill="#fff">
 							БРАТ
 						</text>
-						<Plaque x={0} y={160} w={500} h={96} text="Абонент" size={64} c="#ff6a5a" />
-						<Plaque x={0} y={280} w={500} h={96} text="недоступен" size={64} c="#ff6a5a" />
+						<Plaque x={0} y={150} w={660} h={116} text="Абонент" size={86} c="#ff6a5a" />
+						<Plaque x={0} y={290} w={660} h={116} text="недоступен" size={86} c="#ff6a5a" />
 					</PhoneFrame>
-					<g transform="translate(1340,640) rotate(-8)">
+					<g transform="translate(1480,640) rotate(-8)">
 						<rect x={-190} y={-250} width={380} height={500} rx={46} fill="#07080f" stroke="#4a5164" strokeWidth={8} />
 						<circle r={64} fill="none" stroke="#4a5164" strokeWidth={10} />
 						<line x1={0} y1={-90} x2={0} y2={-20} stroke="#4a5164" strokeWidth={12} strokeLinecap="round" />
@@ -649,22 +649,22 @@ const W20: React.FC = () => {
 
 /* ---- 149 · СМС: бронь на 19:00 отменена ---- */
 const W21: React.FC = () => {
-	const {f, gf} = useShot();
+	const {f} = useShot();
 	const a = k(f, 8, 24);
 	return (
 		<Board tint="#141a48">
 			<Badge />
-			<PhoneFrame y={580} w={820} h={640}>
+			<PhoneFrame y={600} w={1180} h={680}>
 				<g opacity={a}>
-					<rect x={-370} y={-260} width={740} height={110} rx={40} fill="#3a4180" />
-					<text x={-330} y={-190} fontSize={52} fontFamily={FONT} fontWeight={800} fill="#fff">
+					<rect x={-540} y={-290} width={1080} height={120} rx={46} fill="#3a4180" />
+					<text x={-500} y={-208} fontSize={70} fontFamily={FONT} fontWeight={800} fill="#fff">
 						СМС · РЕСТОРАН
 					</text>
-					<rect x={-370} y={-100} width={740} height={260} rx={40} fill="#3a4180" />
-					<text x={0} y={-12} textAnchor="middle" fontSize={64} fontFamily={FONT} fontWeight={900} fill="#fff">
+					<rect x={-540} y={-130} width={1080} height={330} rx={46} fill="#3a4180" />
+					<text x={0} y={-10} textAnchor="middle" fontSize={88} fontFamily={FONT} fontWeight={900} fill="#fff">
 						Бронь на 19:00
 					</text>
-					<text x={0} y={76} textAnchor="middle" fontSize={64} fontFamily={FONT} fontWeight={900} fill="#ff9a6a">
+					<text x={0} y={110} textAnchor="middle" fontSize={88} fontFamily={FONT} fontWeight={900} fill="#ff9a6a">
 						отменена
 					</text>
 				</g>
@@ -701,8 +701,8 @@ const W22: React.FC = () => {
 				</Layer>
 			</Stage>
 			<Screen>
-				<Plaque x={1330} y={180} w={540} h={150} text="0,1 с" size={110} c="#ffd34a" />
-				<g transform="translate(1500,500)">
+				<Plaque x={1540} y={160} w={500} h={140} text="0,1 с" size={104} c="#ffd34a" />
+				<g transform="translate(1540,470)">
 					<rect x={-250} y={-130} width={500} height={130} rx={30} fill="#fff6dc" stroke="#ffd34a" strokeWidth={8} />
 					<text y={-40} textAnchor="middle" fontSize={56} fontFamily={FONT} fontWeight={900} fill="#10132a">
 						17:00 КОНЦЕРТ
@@ -892,11 +892,7 @@ const W28: React.FC = () => {
 					<Actor who="heroSuit" x={w.x} floor={FL} s={HS} facing={1} faceTurn={0.4} look={[0.9, 0.1]} pose={w.pose} vx={w.vx} bob={w.bob} uid="h104" />
 					<Jacket p={w.pose} x={w.x} facing={1} />
 					<Plate x={w.x} yy={400} s={2} />
-					<g transform={`translate(${w.x},${930 + 20})`} opacity={0.4}>
-						<g transform="scale(1,-0.28)">
-							<AgeBadge x={0} y={-30} value={counterAt(gf)} s={1.5} label="СВОБОДНЫХ ВЕЧЕРОВ" />
-						</g>
-					</g>
+					<ellipse cx={w.x} cy={950} rx={150} ry={20} fill="#6a86c8" opacity={0.35} />
 				</Svg>
 			</Layer>
 		</Stage>
@@ -924,13 +920,13 @@ const W29: React.FC = () => {
 				</Layer>
 			</Stage>
 			<Screen>
-				<g opacity={ph} transform="translate(1440,520)">
-					<rect x={-260} y={-300} width={520} height={600} rx={56} fill="#07080f" stroke="#6f7bd8" strokeWidth={8} />
-					<text y={-160} textAnchor="middle" fontSize={72} fontFamily={FONT} fontWeight={900} fill="#fff">
+				<g opacity={ph} transform="translate(1400,540)">
+					<rect x={-330} y={-360} width={660} height={720} rx={64} fill="#07080f" stroke="#6f7bd8" strokeWidth={8} />
+					<text y={-230} textAnchor="middle" fontSize={96} fontFamily={FONT} fontWeight={900} fill="#fff">
 						БРАТ
 					</text>
-					<Plaque x={0} y={40} w={460} h={200} text="Абонент" size={64} c="#ff6a5a" />
-					<Plaque x={0} y={220} w={460} h={96} text="недоступен" size={56} c="#ff6a5a" />
+					<Plaque x={0} y={-30} w={600} h={130} text="Абонент" size={86} c="#ff6a5a" />
+					<Plaque x={0} y={150} w={600} h={130} text="недоступен" size={86} c="#ff6a5a" />
 				</g>
 			</Screen>
 		</>
@@ -997,7 +993,6 @@ const W31: React.FC = () => {
 					<rect x={700} y={740} width={20} height={190} fill="#4a3d5a" />
 					<rect x={1200} y={740} width={20} height={190} fill="#4a3d5a" />
 					{[860, 1060, 1260].map((cx, i) => (mugs > i ? <Mug key={cx} x={cx} y={690} c={i ? '#3a6fd2' : '#f2b21c'} steam={1} f={f + i * 13} /> : null))}
-					{[860, 1060, 1260].map((cx, i) => (<Onoma key={cx} x={cx} y={600} text="ТУК" t={f - (90 + i * 16)} c="#ffd36a" size={56} />))}
 				</Svg>
 			</Layer>
 			<Layer depth={1.1}>
@@ -1011,6 +1006,13 @@ const W31: React.FC = () => {
 					<Actor who="heroSuit" x={x} floor={FL} s={HS} facing={-1} faceTurn={0.5} look={[-0.6, 0.3]} pose={p} vx={f < 30 ? walk.vx : m.vx} bob={f < 30 ? walk.bob : m.bob} uid="h107" />
 					<Jacket p={p} x={x} facing={-1} />
 					<Plate x={x} warn={false} />
+				</Svg>
+			</Layer>
+			<Layer depth={0.9}>
+				<Svg>
+					{[860, 1060, 1260].map((cx, i) => (
+						<Onoma key={cx} x={cx} y={560} text="ТУК" t={f - (90 + i * 16)} c="#ffd36a" size={64} />
+					))}
 				</Svg>
 			</Layer>
 		</Stage>

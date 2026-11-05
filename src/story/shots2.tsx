@@ -432,6 +432,7 @@ const T13: React.FC = () => {
 	const kb = hands(kp, kw.x, 0.78, -1).f;
 	const cam = camPath(f, [[0, camOn(1000, 580, 1.15)], [a54, camOn(1100, 580, 1.1)], [a54 + 100, camOn(1200, 580, 1.15)]]);
 	return (
+		<>
 		<Stage cam={cam} bg="#2a2a48" light={{x: 20, y: 10, o: 0.4}}>
 			<Layer depth={1.6}>
 				<KitchenK night />
@@ -442,7 +443,7 @@ const T13: React.FC = () => {
 			<Layer depth={1.1}>
 				<Svg>
 					<rect x={1790} y={300} width={200} height={600} rx={8} fill="#8a6a44" stroke="#10132a" strokeWidth={6} />
-					<Onoma x={1720} y={440} text="ТУК-ТУК" t={f - (a54 + 24)} c="#ffd36a" size={74} />
+					
 				</Svg>
 			</Layer>
 			<Layer depth={1}>
@@ -454,6 +455,10 @@ const T13: React.FC = () => {
 				</Svg>
 			</Layer>
 		</Stage>
+		<Screen>
+			<Onoma x={1500} y={330} text="ТУК-ТУК" t={f - (a54 + 24)} c="#ffd36a" size={90} />
+		</Screen>
+		</>
 	);
 };
 

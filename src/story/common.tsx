@@ -3,7 +3,7 @@ import {AbsoluteFill} from 'remotion';
 import {interpolate} from 'remotion';
 import {Pose, RIG, rigPoints, toLocal} from '../engine/Stickman';
 import {reach} from '../kit/actions';
-import {counterAt, useShot} from '../kit/core';
+import {counterAt, counterChangedAgo, useShot} from '../kit/core';
 import {clamp, ease} from '../kit/kit';
 import {Tag} from './places';
 
@@ -74,7 +74,21 @@ export const camPath = (f: number, ks: [number, Cam][]): Cam => {
 export const plateOn = (gf: number) => gf < L('008').from + 70 || gf >= L('021').from + 95;
 export const Plate: React.FC<{x: number; yy?: number; s?: number; warn?: boolean; pop?: number}> = ({x, yy = 405, s = 2, warn, pop = 1}) => {
 	const {gf} = useShot();
-	return <Tag x={x} y={yy} value={counterAt(gf)} f={gf} s={s} pop={pop} heart={false} warn={warn} />;
+	const ago = counterChangedAgo(gf);
+	const prev = counterAt(gf - Math.max(0, ago) - 2);
+	const d = Math.round(counterAt(gf) - prev);
+	const live = ago >= 0 && ago < 34 && d !== 0 && Math.abs(d) <= 3;
+	const popK = live ? 1 + 0.3 * Math.exp(-ago / 5) : 1;
+	return (
+		<g>
+			<Tag x={x} y={yy} value={counterAt(gf)} f={gf} s={s} pop={pop * popK} heart={false} warn={warn} />
+			{live ? (
+				<text x={x + 215 * s} y={yy - 12 * s - ago * 1.4} textAnchor="middle" fontSize={50 * s} fontFamily="'Rubik', sans-serif" fontWeight={900} fill={d < 0 ? '#ff6a5a' : '#5fe08a'} stroke="#10132a" strokeWidth={6 * s} paintOrder="stroke" opacity={1 - ago / 40}>
+					{d < 0 ? `−${-d}` : `+${d}`}
+				</text>
+			) : null}
+		</g>
+	);
 };
 export const label = STORY.counter?.label;
 

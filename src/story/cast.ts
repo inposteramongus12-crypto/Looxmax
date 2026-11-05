@@ -15,7 +15,7 @@ export const CAST: Record<string, CastMember> = {
 	bro: {color: '#2f6fd8', hair: 'short', hairColor: '#5a3a22', rim: '#e6f0ff', rimW: 2.4, shoe: '#f2f2f2'},
 	sis: {color: '#e86aa0', hair: 'ponytail', hairColor: '#5a3a22', rim: '#ffe6f0', rimW: 2.4, shoe: '#f2f2f2'},
 	mom: {color: '#7a5cc4', outfit: 'gown', hair: 'bob', rim: '#ffe6c8', rimW: 2.4, shoe: '#2c2540'},
-	grandpa: {color: '#6b7f8e', outfit: 'tee', hair: 'grey', acc: ['glasses'], rim: '#eef4ff', rimW: 2.4, shoe: '#8a5a3a'},
+	grandpa: {color: '#22a6a6', outfit: 'tee', hair: 'grey', acc: ['glasses'], rim: '#ffffff', rimW: 4.2, shoe: '#8a5a3a'},
 	teacher: {color: '#8e3a4f', outfit: 'suit', hair: 'bun', acc: ['glasses'], rim: '#ffe6d6', rimW: 2.4, shoe: '#2b1d24'},
 	barber: {color: '#3aa37a', outfit: 'apron', hair: 'none', acc: ['mustache'], rim: '#e8fff2', rimW: 2.4, shoe: '#1d2b24'},
 	heroMess: {color: '#f2b21c', hair: 'spiky', hairColor: '#3a2a1c', rim: '#fff0cc', rimW: 2.4, sp: 'HERO'},

@@ -47,5 +47,4 @@ export const STORY: {
 		],
 	},
 	bed: 'sfx/bed.wav',
-	endCaption: ['К КОМУ ТЫ ЗАЙДЁШЬ', 'СЕГОДНЯ БЕЗ ЗВОНКА?'],
 };

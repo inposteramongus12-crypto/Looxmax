@@ -420,7 +420,7 @@ const V3: React.FC = () => {
 	const ph = f * 0.45;
 	const bx = interpolate(f, [0, 140], [900, 1300], clamp);
 	const mx = interpolate(f, [0, 140], [520, 700], clamp);
-	const cam = camPath(f, [[0, camOn(800, 590, 1.0)], [140, camOn(1000, 580, 1.12)]]);
+	const cam = camPath(f, [[0, camOn(720, 590, 1.0)], [70, camOn(800, 580, 1.06)], [140, camOn(900, 570, 1.12)]]);
 	return (
 		<Stage cam={cam} bg="#ff9a6a" light={WARM}>
 			<Layer depth={1.6}>
@@ -430,7 +430,7 @@ const V3: React.FC = () => {
 				<Svg>
 					<Actor who="bro" x={bx} floor={FL} s={1} facing={1} faceTurn={0.3} look={[1, 0]} pose={run(ph)} vx={6} uid="b69" />
 					<Actor who="hero" x={mx} floor={FL} s={HS} facing={1} faceTurn={0.3} look={[1, 0.2]} expr="worried" mouth="open" pose={{...run(ph + 1.4), lean: 12}} vx={5} uid="h69" />
-					<Plate x={mx} yy={400} s={1.7} />
+					<Plate x={mx} yy={380} s={2.4} />
 				</Svg>
 			</Layer>
 		</Stage>
@@ -440,7 +440,7 @@ const V3: React.FC = () => {
 /* ---- 110 · новый геймпад, играют до ночи ---- */
 const V4: React.FC = () => {
 	const {f, gf} = useShot();
-	const cam = camPath(f, [[0, camOn(960, 600, 1.0)], [100, camOn(960, 590, 1.2)]]);
+	const cam = camPath(f, [[0, camOn(900, 610, 1.0)], [60, camOn(980, 600, 1.12)], [110, camOn(1000, 590, 1.22)]]);
 	return (
 		<>
 			<Stage cam={cam} bg="#d8e8e6" light={WARM}>
@@ -453,7 +453,7 @@ const V4: React.FC = () => {
 						<Actor who="bro" x={800} floor={FL} seat={790} s={1} facing={1} faceTurn={0.4} look={[0.9, 0]} pose={reach(reach({...SIT}, 'F', [50, -20], 0.5), 'B', [46, -18], 0.5)} uid="b70" />
 						<Chair x={1100} y={800} facing={1} />
 						<Actor who="hero" x={1100} floor={FL} seat={790} s={HS} facing={1} faceTurn={0.4} look={[0.9, 0]} pose={reach(reach({...SIT}, 'F', [50, -20], 0.5), 'B', [46, -18], 0.5)} uid="h70" />
-						<Plate x={1100} yy={420} s={1.7} />
+						<Plate x={1100} yy={380} s={2.4} />
 					</Svg>
 				</Layer>
 			</Stage>
@@ -470,7 +470,7 @@ const V4: React.FC = () => {
 const V5: React.FC = () => {
 	const {f, gf} = useShot();
 	const toss = k(f, 40, 70);
-	const cam = camPath(f, [[0, camOn(1000, 580, 1.1)], [150, camOn(980, 560, 1.4)]]);
+	const cam = camPath(f, [[0, camOn(1050, 590, 1.0)], [70, camOn(1050, 580, 1.12)], [150, camOn(1040, 570, 1.25)]]);
 	return (
 		<Stage cam={cam} bg="#d8e8e6" light={WARM}>
 			<Layer depth={1.6}>
@@ -485,6 +485,7 @@ const V5: React.FC = () => {
 					</g>
 					<Onoma x={1150} y={420} text="ГОЛ!" t={f - 40} c="#ffd36a" size={120} />
 					<Actor who="hero" x={1250} floor={FL} s={HS} facing={-1} faceTurn={0.4} look={[-0.8, 0]} expr="wide" pose={gesture('wave', idle(gf, 5), env(f, 44, 100, 6, 8), f)} uid="h71" />
+					<Plate x={1250} yy={380} s={2.4} />
 				</Svg>
 			</Layer>
 		</Stage>
@@ -556,7 +557,7 @@ const V8: React.FC = () => {
 	const {f, gf, at} = useShot();
 	const walk = walkTo(f, 90, 180, 760, 360, 3, 0.25);
 	const wave = env(f, 130, 170, 6, 8);
-	const cam = camPath(f, [[0, camOn(960, 600, 1.2)], [90, camOn(900, 580, 1.0)], [160, camOn(700, 580, 1.15)]]);
+	const cam = camPath(f, [[0, camOn(960, 610, 1.15)], [90, camOn(920, 590, 1.0)], [180, camOn(900, 580, 1.05)]]);
 	return (
 		<>
 			<Stage cam={cam} bg="#d6b98e" light={WARM}>
@@ -567,6 +568,7 @@ const V8: React.FC = () => {
 					<Svg>
 						<Chair x={1200} y={800} facing={-1} />
 						<Actor who="hero" x={1200} floor={FL} seat={790} s={HS} facing={-1} faceTurn={0.4} look={[-0.8, 0.4]} expr="sad" pose={SIT} uid="h73" />
+						<Plate x={1200} yy={430} s={2.2} />
 						{f < 90 ? (
 							<>
 								<Chair x={760} y={800} facing={1} />
@@ -592,31 +594,36 @@ const V9: React.FC = () => {
 	const sent = f > 70;
 	return (
 		<Board tint="#1a2150">
-			<PhoneFrame w={760} h={820}>
-				<rect x={-380} y={-410} width={760} height={110} rx={52} fill="#2a336e" />
-				<text x={0} y={-336} textAnchor="middle" fontSize={64} fontFamily={FONT} fontWeight={900} fill="#fff">
+			<PhoneFrame w={1060} h={760}>
+				<rect x={-530} y={-380} width={1060} height={120} rx={56} fill="#2a336e" />
+				<text x={0} y={-296} textAnchor="middle" fontSize={84} fontFamily={FONT} fontWeight={900} fill="#fff">
 					ТЁМА
 				</text>
 				{sent ? (
 					<g opacity={k(f, 70, 82)}>
-						<rect x={-340} y={-170} width={680} height={200} rx={36} fill="#5fe08a" />
-						<text x={0} y={-80} textAnchor="middle" fontSize={64} fontFamily={FONT} fontWeight={800} fill="#10132a">
+						<rect x={-480} y={-200} width={960} height={260} rx={44} fill="#5fe08a" />
+						<text x={0} y={-90} textAnchor="middle" fontSize={88} fontFamily={FONT} fontWeight={800} fill="#10132a">
 							Будешь жюри
 						</text>
-						<text x={0} y={4} textAnchor="middle" fontSize={64} fontFamily={FONT} fontWeight={800} fill="#10132a">
+						<text x={0} y={14} textAnchor="middle" fontSize={88} fontFamily={FONT} fontWeight={800} fill="#10132a">
 							в пятницу?
 						</text>
 					</g>
 				) : (
-					<text x={-340} y={-60} fontSize={64} fontFamily={FONT} fontWeight={800} fill="#fff" opacity={typed}>
-						{'Будешь жюри в пятницу?'.slice(0, Math.floor(typed * 22))}|
-					</text>
+					<g opacity={typed}>
+						<text x={-480} y={-80} fontSize={88} fontFamily={FONT} fontWeight={800} fill="#fff">
+							{'Будешь жюри'.slice(0, Math.floor(typed * 11))}
+						</text>
+						<text x={-480} y={20} fontSize={88} fontFamily={FONT} fontWeight={800} fill="#fff">
+							{typed > 0.5 ? 'в пятницу?'.slice(0, Math.floor((typed - 0.5) * 20)) : ''}|
+						</text>
+					</g>
 				)}
 				{f > 100 ? (
 					<g opacity={k(f, 100, 112)}>
-						<rect x={-340} y={110} width={260} height={110} rx={40} fill="#3a4180" />
+						<rect x={-480} y={150} width={340} height={130} rx={50} fill="#3a4180" />
 						{[0, 1, 2].map((i) => (
-							<circle key={i} cx={-270 + i * 70} cy={165 + Math.sin(f / 4 + i) * 10} r={14} fill="#fff" />
+							<circle key={i} cx={-400 + i * 90} cy={215 + Math.sin(f / 4 + i) * 12} r={18} fill="#fff" />
 						))}
 					</g>
 				) : null}
@@ -633,23 +640,23 @@ const V10: React.FC = () => {
 	return (
 		<Board tint="#1a2150">
 			<Badge />
-			<PhoneFrame y={600} w={900} h={640}>
+			<PhoneFrame y={610} w={1160} h={660}>
 				<g opacity={k(f, 4, 16)}>
-					<rect x={-420} y={-290} width={520} height={110} rx={40} fill="#3a4180" />
-					<text x={-380} y={-216} fontSize={66} fontFamily={FONT} fontWeight={800} fill="#fff">
+					<rect x={-540} y={-290} width={880} height={130} rx={48} fill="#3a4180" />
+					<text x={-500} y={-198} fontSize={88} fontFamily={FONT} fontWeight={900} fill="#fff">
 						Буду. Строгим.
 					</text>
 				</g>
 				<g opacity={k(f, a118 + 4, a118 + 16)}>
-					<rect x={-420} y={-120} width={760} height={130} rx={44} fill="#3a4180" />
-					<text x={-380} y={-36} fontSize={52} fontFamily={FONT} fontWeight={800} fill="#fff">
+					<rect x={-540} y={-130} width={960} height={120} rx={48} fill="#3a4180" />
+					<text x={-500} y={-48} fontSize={70} fontFamily={FONT} fontWeight={800} fill="#fff">
 						▶ ▂▅▇▅▂▃▆▃▂ 0:04
 					</text>
 				</g>
 				<g opacity={k(f, a119 + 8, a119 + 20)}>
-					<rect x={80} y={40} width={330} height={190} rx={36} fill="#5fe08a" />
-					<g transform="translate(245,135)">
-						<Ico k="pad" x={0} y={0} s={1.3} />
+					<rect x={90} y={40} width={450} height={230} rx={44} fill="#5fe08a" />
+					<g transform="translate(315,155)">
+						<Ico k="pad" x={0} y={0} s={1.6} />
 					</g>
 				</g>
 			</PhoneFrame>
