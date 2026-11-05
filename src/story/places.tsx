@@ -274,20 +274,20 @@ export const WeekCal: React.FC<{t: number; times: number[]; open: number; burn?:
 			{WEEK.map((w, i) => {
 				const on = t >= times[i];
 				const pop = interpolate(t, [times[i], times[i] + 10], [0.7, 1], {...clamp, easing: ease});
-				const x = 150 + i * 252;
+				const x = 66 + i * 258;
 				const dead = t >= (burn[i] ?? 1e9);
 				return (
 					<g key={i} transform={`translate(${x},0)`}>
-						<g transform={`translate(110,590) scale(${on ? pop : 1}) translate(-110,-590)`}>
-							<rect x={0} y={290} width={220} height={600} rx={30} fill={dead ? '#2a1c1c' : on ? '#fff6dc' : '#1c2150'} stroke={dead ? '#ff6a3a' : on ? '#ffd34a' : '#3a4180'} strokeWidth={6} />
-							<text x={110} y={370} textAnchor="middle" fontSize={64} fontFamily={FONT} fontWeight={900} fill={on ? '#10132a' : '#7a84c8'}>
+						<g transform={`translate(124,590) scale(${on ? pop : 1}) translate(-124,-590)`}>
+							<rect x={0} y={290} width={248} height={600} rx={30} fill={dead ? '#2a1c1c' : on ? '#fff6dc' : '#1c2150'} stroke={dead ? '#ff6a3a' : on ? '#ffd34a' : '#3a4180'} strokeWidth={6} />
+							<text x={124} y={372} textAnchor="middle" fontSize={76} fontFamily={FONT} fontWeight={900} fill={on ? '#10132a' : '#7a84c8'}>
 								{w.d}
 							</text>
 							{on ? (
 								<>
-									<Ico k={w.ico} x={110} y={520} s={1.45} />
-									<Mini x={110} y={715} c={w.c} hair={w.hair} s={1.3} />
-									<text x={110} y={850} textAnchor="middle" fontSize={48} fontFamily={FONT} fontWeight={900} fill="#10132a">
+									<Ico k={w.ico} x={124} y={510} s={1.5} />
+									<Mini x={124} y={690} c={w.c} hair={w.hair} s={1.3} />
+									<text x={124} y={850} textAnchor="middle" fontSize={54} fontFamily={FONT} fontWeight={900} fill="#10132a">
 										{w.who}
 									</text>
 								</>
@@ -305,7 +305,7 @@ export const Ribbon: React.FC<{t: number; burned: number[]; cursor: number; mine
 	const cell = (n: number) => {
 		const row = n <= 15 ? 0 : 1;
 		const col = (n - 1) % 15;
-		return {x: 60 + col * 120, y: 330 + row * 190};
+		return {x: 34 + col * 124, y: 330 + row * 190};
 	};
 	return (
 		<g>
@@ -316,26 +316,26 @@ export const Ribbon: React.FC<{t: number; burned: number[]; cursor: number; mine
 				const mineOn = n >= mine[0] && n <= mine[1];
 				return (
 					<g key={n}>
-						<rect x={p.x} y={p.y} width={108} height={130} rx={18} fill={dead ? '#2a1c1c' : mineOn ? '#fff6dc' : '#242a64'} stroke={dead ? '#ff6a3a' : mineOn ? '#ffd34a' : '#4a52a0'} strokeWidth={dead ? 6 : 5} />
-						<text x={p.x + 54} y={p.y + 82} textAnchor="middle" fontSize={56} fontFamily={FONT} fontWeight={900} fill={dead ? '#ff9a6a' : mineOn ? '#10132a' : '#8a92d8'}>
+						<rect x={p.x} y={p.y} width={116} height={130} rx={18} fill={dead ? '#2a1c1c' : mineOn ? '#fff6dc' : '#242a64'} stroke={dead ? '#ff6a3a' : mineOn ? '#ffd34a' : '#4a52a0'} strokeWidth={dead ? 6 : 5} />
+						<text x={p.x + 58} y={p.y + 90} textAnchor="middle" fontSize={72} fontFamily={FONT} fontWeight={900} fill={dead ? '#ff9a6a' : mineOn ? '#10132a' : '#8a92d8'}>
 							{n}
 						</text>
-						{dead ? <path d={`M${p.x + 14},${p.y + 20} L${p.x + 94},${p.y + 112} M${p.x + 94},${p.y + 20} L${p.x + 14},${p.y + 112}`} stroke="#ff6a3a" strokeWidth={8} strokeLinecap="round" /> : null}
+						{dead ? <path d={`M${p.x + 14},${p.y + 20} L${p.x + 102},${p.y + 112} M${p.x + 102},${p.y + 20} L${p.x + 14},${p.y + 112}`} stroke="#ff6a3a" strokeWidth={8} strokeLinecap="round" /> : null}
 					</g>
 				);
 			})}
 			{(() => {
 				const p = cell(cursor);
 				return (
-					<g transform={`translate(${p.x + 54},${p.y - 24})`}>
+					<g transform={`translate(${p.x + 58},${p.y - 24})`}>
 						<path d="M-18,-28 L0,0 L18,-28 Z" fill="#5fe08a" />
-						<text y={-40} textAnchor="middle" fontSize={44} fontFamily={FONT} fontWeight={900} fill="#5fe08a" stroke="#10132a" strokeWidth={8} paintOrder="stroke">
+						<text y={-40} textAnchor="middle" fontSize={58} fontFamily={FONT} fontWeight={900} fill="#5fe08a" stroke="#10132a" strokeWidth={8} paintOrder="stroke">
 							СЕГОДНЯ
 						</text>
 					</g>
 				);
 			})()}
-			{showMoon > 0 ? <Ico k="moon" x={cell(cursor).x + 92} y={cell(cursor).y + 20} s={0.5 * showMoon} /> : null}
+			{showMoon > 0 ? <Ico k="moon" x={cell(cursor).x + 98} y={cell(cursor).y + 20} s={0.5 * showMoon} /> : null}
 		</g>
 	);
 };
@@ -352,8 +352,8 @@ export const Plaque: React.FC<{x: number; y: number; w: number; h: number; text:
 /* подпись «схема, не измерения» — на схемах весь показ */
 export const SchemeNote: React.FC = () => (
 	<g>
-		<rect x={560} y={968} width={800} height={74} rx={37} fill="#11142c" stroke="#ffd34a" strokeWidth={5} />
-		<text x={960} y={1019} textAnchor="middle" fontSize={56} fontFamily={FONT} fontWeight={800} fill="#ffd34a">
+		<rect x={420} y={950} width={1080} height={100} rx={50} fill="#11142c" stroke="#ffd34a" strokeWidth={5} />
+		<text x={960} y={1015} textAnchor="middle" fontSize={76} fontFamily={FONT} fontWeight={800} fill="#ffd34a">
 			схема, не измерения
 		</text>
 	</g>

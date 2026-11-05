@@ -12,7 +12,7 @@ import {Sleeper} from '../kit/kit';
 import {Bubble, Board, FONT, HAND} from '../kit/ui';
 import {Onoma} from '../reference/PauseTime';
 import {AgeBadge} from '../kit/ui';
-import {FL, HS, WRAP, camPath, hands, hip, Plate, plateOn} from './common';
+import {FL, HS, WRAP, Jacket, Screen, camPath, hands, hip, Plate} from './common';
 import {Barber, Bathroom, Face, GrandRoom, Ico, Mini, Plaque, Ribbon, SchemeNote, WeekCal} from './places';
 
 /* ===== Parts 1–3 (lines 001–035). Mitya = hero. World 1920×1080, floor 900. Plates ≥ 60 px. ===== */
@@ -24,16 +24,23 @@ const BigText: React.FC<{x: number; y: number; t: string; size?: number; c?: str
 		{t}
 	</text>
 );
-const Steam: React.FC<{x: number; y: number; f: number; on: number}> = ({x, y, f, on}) => (
+const Steam: React.FC<{x: number; y: number; f: number; on: number; z?: number}> = ({x, y, f, on, z = 1}) => (
 	<g opacity={on}>
 		{[0, 1, 2, 3, 4].map((i) => {
 			const u = ((f / 38 + i / 5) % 1);
-			return <circle key={i} cx={x + Math.sin(u * 6 + i) * 18} cy={y - u * 190} r={16 + u * 26} fill="#fff" opacity={(1 - u) * 0.7} />;
+			return <circle key={i} cx={x + Math.sin(u * 6 + i) * 18 * z} cy={y - u * 190 * z} r={(16 + u * 26) * z} fill="#fff" opacity={(1 - u) * 0.75} />;
 		})}
 	</g>
 );
 
 /* ---- 001–002 · кухня, 21:40, табличка 0 мигает, свет, чайник, три чашки ---- */
+const CupSteam: React.FC<{f: number}> = ({f}) => (
+	<g>
+		{[860, 1060, 1260].map((cx, i) => (
+			<Steam key={cx} x={cx} y={640} f={f + i * 13} on={1} z={0.55} />
+		))}
+	</g>
+);
 const S1: React.FC = () => {
 	const {f, gf, at} = useShot();
 	const a2 = at('002');
@@ -45,7 +52,6 @@ const S1: React.FC = () => {
 	const x = f < a2 + 36 ? HX : mv.x;
 	let p: Pose = f < a2 + 36 ? idle(gf, 1) : mv.pose;
 	p = reach(p, 'F', toLocal(1400, 560, HX, hip(HS), HS, 1), sw);
-	const mugs = Number(f >= a2 + 86) + Number(f >= a2 + 100) + Number(f >= a2 + 114);
 	const cam = camPath(f, [
 		[0, camOn(1100, 520, 1.3)],
 		[a2 - 10, camOn(1230, 440, 1.7)],
@@ -53,32 +59,35 @@ const S1: React.FC = () => {
 		[a2 + 100, camOn(980, 660, 1.35)],
 	]);
 	return (
+		<>
 		<Stage cam={cam} bg="#14152e" light={{x: 20, y: 10, o: 0.3 + 0.2 * (1 - dark)}}>
 			<Layer depth={1.6}>
 				<Kitchen night />
 			</Layer>
 			<Layer depth={1.25}>
-				<KitchenTable night mugs={mugs} />
+				<KitchenTable night mugs={3} />
 			</Layer>
 			<Layer depth={1.1}>
 				<Svg>
 					<rect x={1388} y={520} width={24} height={64} rx={6} fill="#e8e4d8" stroke="#10132a" strokeWidth={4} />
 					<rect x={-700} y={-400} width={3300} height={1500} fill="#04051a" opacity={dark} />
-					<Plaque x={820} y={560} w={330} h={120} text="21:40" size={92} c="#ff9a6a" />
-					<Steam x={285} y={560} f={f} on={interpolate(f, [a2 + 60, a2 + 80], [0, 1], clamp)} />
-					<Onoma x={860} y={640} text="ТУК" t={f - (a2 + 86)} c="#ffd36a" size={56} />
-					<Onoma x={1060} y={640} text="ТУК" t={f - (a2 + 100)} c="#ffd36a" size={56} />
-					<Onoma x={1260} y={640} text="ТУК" t={f - (a2 + 114)} c="#ffd36a" size={56} />
+					<Steam x={285} y={560} f={f} on={1} />
+					<CupSteam f={f} />
 					<Onoma x={1420} y={500} text="ЩЕЛК" t={f - lightT} c="#fff3b0" size={60} />
 				</Svg>
 			</Layer>
 			<Layer depth={1}>
 				<Svg>
 					<Actor who="heroSuit" x={x} floor={FL} s={HS} facing={f < a2 + 36 ? 1 : -1} faceTurn={0.5} look={f < a2 + 36 ? [0.8, 0] : [-0.6, 0.3]} pose={p} vx={mv.vx} bob={mv.bob} uid="h1" />
+					<Jacket p={p} x={x} facing={f < a2 + 36 ? 1 : -1} />
 					<Plate x={x} warn={f < a2 + 8} />
 				</Svg>
 			</Layer>
 		</Stage>
+		<Screen>
+			<Plaque x={300} y={150} w={400} h={150} text="21:40" size={110} c="#ff9a6a" />
+		</Screen>
+		</>
 	);
 };
 
@@ -109,9 +118,8 @@ const S2: React.FC = () => {
 					<Actor who="heroSuit" x={HX} floor={FL} s={HS} facing={1} faceTurn={0.5} look={[0.9, 0.9]} pose={hp} uid="h2" />
 					<Plate x={HX} warn />
 					<rect x={1130} y={686} width={110} height={16} rx={6} fill="#1b1e2a" stroke="#6f7bd8" strokeWidth={3} />
-					<g transform={`translate(${HX + 28},${hip(HS) - 118}) rotate(12)`}>
-						<rect x={-18} y={-28} width={40} height={50} fill="#fbf8ef" stroke="#10132a" strokeWidth={3} />
-					</g>
+					<CupSteam f={f} />
+					<Jacket p={hp} x={HX} facing={1} />
 					{pop > 0 ? (
 						<g transform={`translate(${HX + 400},520) rotate(-4) scale(${0.6 + 0.4 * pop})`} opacity={pop}>
 							<rect x={-230} y={-90} width={460} height={180} rx={14} fill="#fbf8ef" stroke="#10132a" strokeWidth={6} />
@@ -131,7 +139,7 @@ const S3: React.FC = () => {
 	const {f, gf, at} = useShot();
 	const cam = camPath(f, [
 		[0, camOn(300, 520, 1.7)],
-		[at('005') + 50, camOn(1150, 600, 1.25)],
+		[at('005') + 50, camOn(1250, 580, 1.3)],
 		[at('006') + 20, camOn(1500, 560, 1.15)],
 	]);
 	const look = k(f, at('005') + 30, at('005') + 70);
@@ -148,6 +156,7 @@ const S3: React.FC = () => {
 				<Svg>
 					<Steam x={285} y={560} f={f} on={1} />
 					<Steam x={285} y={560} f={f + 19} on={0.8} />
+					<CupSteam f={f} />
 					<rect x={1790} y={300} width={200} height={600} rx={8} fill="#8a6a44" stroke="#10132a" strokeWidth={6} />
 					<circle cx={1830} cy={620} r={14} fill="#ffd34a" />
 					<rect x={1796} y={880} width={190} height={14} fill="#ffe8a0" opacity={0.7} />
@@ -156,6 +165,7 @@ const S3: React.FC = () => {
 			<Layer depth={1}>
 				<Svg>
 					<Actor who="heroSuit" x={1250} floor={FL} s={HS} facing={1} faceTurn={0.5} look={[0.3 + 0.7 * look, 0]} pose={idle(gf, 2)} uid="h3" />
+					<Jacket p={idle(gf, 2)} x={1250} facing={1} />
 					<Plate x={1250} />
 				</Svg>
 			</Layer>
@@ -198,6 +208,7 @@ const S5: React.FC = () => {
 			<Layer depth={1.25}>
 				<g transform={`translate(${mx},${-rew * 220})`} opacity={1 - rew * 0.6}>
 					<KitchenTable night mugs={3} />
+					<Svg><CupSteam f={f} /></Svg>
 				</g>
 			</Layer>
 			<Layer depth={1.1}>
@@ -208,6 +219,7 @@ const S5: React.FC = () => {
 			<Layer depth={1}>
 				<Svg>
 					<Actor who="heroSuit" x={1230} floor={FL} s={HS} facing={-1} faceTurn={0.5} look={[-0.7, 0]} pose={idle(gf, 4)} uid="h5" />
+					<Jacket p={idle(gf, 4)} x={1230} facing={-1} />
 					<Plate x={1230} s={2.2} yy={400} pop={1} />
 				</Svg>
 			</Layer>
@@ -227,7 +239,7 @@ const S6: React.FC = () => {
 	const tp: Pose = reach(tw.pose, 'F', [40, -90], slap);
 	const hunch = env(f, a10 + 4, a10 + 60, 8, 30);
 	const hp = slouch(hw.pose, 0.4 + hunch);
-	const cam = camPath(f, [[0, camOn(700, 600, 1.15)], [at('009') + 70, camOn(1000, 570, 1.2)], [a10 + 60, camOn(1000, 580, 1.25)]]);
+	const cam = camPath(f, [[0, camOn(500, 620, 1.0)], [at('009') + 60, camOn(900, 580, 1.15)], [at('009') + 118, camOn(1050, 560, 1.3)], [a10 + 56, camOn(950, 580, 1.2)]]);
 	const bt = f - (at('009') + 112);
 	return (
 		<Stage cam={cam} bg="#f1e6c8" light={WARM}>
@@ -262,7 +274,7 @@ const S7: React.FC = () => {
 	const labels = ['ГОЛОС', 'СПИНА', 'ВЗГЛЯД'];
 	const T = [24, 62, 104];
 	const fl = f > 130 ? (Math.floor((f - 130) / 6) % 2 === 0 ? 1 : 0.55) : 1;
-	const cam = camPath(f, [[0, camOn(960, 560, 1.2)], [at('011') + 150, camOn(960, 540, 1.45)]]);
+	const cam = camPath(f, [[0, camOn(960, 580, 1.15)], [95, camOn(960, 560, 1.4)], [108, camOn(960, 500, 1.85)], [at('011') + 175, camOn(960, 510, 1.75)]]);
 	return (
 		<Stage cam={cam} bg="#f1e6c8" light={WARM}>
 			<Layer depth={1.6}>
@@ -274,8 +286,8 @@ const S7: React.FC = () => {
 					{labels.map((t, i) => {
 						const u = k(f, T[i], T[i] + 10);
 						return u > 0 ? (
-							<g key={t} opacity={u * fl} transform={`translate(${620 + i * 340},${i === 1 ? 300 : 360}) scale(${0.7 + 0.3 * u})`}>
-								<Plaque x={0} y={0} w={310} h={110} text={t} size={64} c={['#5fe08a', '#ffd34a', '#6aa8ff'][i]} />
+							<g key={t} opacity={u * fl} transform={`translate(${680 + i * 280},${i === 1 ? 310 : 370}) scale(${0.7 + 0.3 * u})`}>
+								<Plaque x={0} y={0} w={290} h={110} text={t} size={64} c={['#5fe08a', '#ffd34a', '#6aa8ff'][i]} />
 							</g>
 						) : null;
 					})}
@@ -410,6 +422,7 @@ const S12: React.FC = () => {
 	const card = k(f, a19 + 128, a19 + 144);
 	const cam = camPath(f, [[0, camOn(900, 600, 1.35)], [a19, camOn(960, 560, 1.15)], [a19 + 60, camOn(1380, 560, 1.2)], [a19 + 130, camOn(1150, 540, 1.1)]]);
 	return (
+		<>
 		<Stage cam={cam} bg="#2a2038" light={{x: 20, y: 10, o: 0.35}}>
 			<Layer depth={1.6}>
 				<GrandRoom f={gf} dark={dark / 0.72} />
@@ -429,29 +442,32 @@ const S12: React.FC = () => {
 			<Layer depth={1}>
 				<Svg>
 					<Actor who="grandpa" x={sit ? 700 : walk.x} floor={FL} seat={sit ? 790 : undefined} s={1} facing={1} faceTurn={0.5} look={f < at('018') + 70 ? [0.6, 0.6] : [0.9, -0.5]} pose={gp} vx={sit ? 0 : walk.vx} bob={sit ? 0 : walk.bob} uid="g12" />
-					<Plaque x={1180} y={230} w={420} h={150} text={clock} size={110} c={f < press ? '#ffd34a' : '#ff9a6a'} />
-					{card > 0 ? (
-						<g transform={`translate(820,500) scale(${0.7 + 0.3 * card})`} opacity={card}>
-							<rect x={-290} y={-230} width={580} height={460} rx={34} fill="#fff6dc" stroke="#ffd34a" strokeWidth={8} />
-							<text x={-130} y={-60} textAnchor="middle" fontSize={190} fontFamily={FONT} fontWeight={900} fill="#10132a">
-								29
-							</text>
-							<Ico k="cake" x={130} y={-20} s={2.2} />
-							<Plaque x={0} y={150} w={440} h={110} text="ДЕДУ 80" size={80} c="#e86aa0" />
-						</g>
-					) : null}
 				</Svg>
 			</Layer>
 		</Stage>
+		<Screen>
+			<Plaque x={1500} y={150} w={440} h={160} text={clock} size={120} c={f < press ? '#ffd34a' : '#ff9a6a'} />
+			{card > 0 ? (
+				<g transform={`translate(520,560) scale(${0.7 + 0.3 * card})`} opacity={card}>
+					<rect x={-290} y={-230} width={580} height={460} rx={34} fill="#fff6dc" stroke="#ffd34a" strokeWidth={8} />
+					<text x={-130} y={-60} textAnchor="middle" fontSize={190} fontFamily={FONT} fontWeight={900} fill="#10132a">
+						29
+					</text>
+					<Ico k="cake" x={130} y={-20} s={2.2} />
+					<Plaque x={0} y={150} w={440} h={110} text="ДЕДУ 80" size={80} c="#e86aa0" />
+				</g>
+			) : null}
+		</Screen>
+		</>
 	);
 };
 
 /* ---- 020 · клетка 30: проводы 19:00 с бронью ---- */
 const S13: React.FC = () => {
 	const {f} = useShot();
-	const u = k(f, 0, 12);
-	const v = k(f, 50, 66);
-	const w = k(f, 110, 126);
+	const u = 0.8 + 0.2 * k(f, 0, 10);
+	const v = k(f, 30, 46);
+	const w = k(f, 100, 116);
 	return (
 		<Board tint="#1a2150">
 			<g transform={`translate(560,560) scale(${0.7 + 0.3 * u})`} opacity={u}>
@@ -462,7 +478,7 @@ const S13: React.FC = () => {
 				<Ico k="suitcase" x={0} y={110} s={3.4} />
 			</g>
 			<g opacity={v} transform={`translate(1380,430)`}>
-				<Plaque x={0} y={0} w={760} h={190} text="ПРОВОДЫ 19:00" size={96} c="#ffd34a" />
+				<Plaque x={-20} y={0} w={960} h={190} text="ПРОВОДЫ 19:00" size={104} c="#ffd34a" />
 			</g>
 			<g opacity={w} transform="translate(1380,690)">
 				<Plaque x={0} y={0} w={560} h={130} text="БРОНЬ ✓" size={84} c="#5fe08a" />
@@ -504,11 +520,11 @@ const S14: React.FC = () => {
 /* ---- 023 · утро, 29 едет по коридору, мама проходит мимо ---- */
 const S15: React.FC = () => {
 	const {f, gf, at} = useShot();
-	const hw = walkTo(f, 14, 120, 200, 1000, 1, 0.3);
-	const mw = walkTo(f, 40, 150, 1650, -250, 6, 0.3);
+	const hw = walkTo(f, 10, 125, 150, 620, 1, 0.3);
+	const mw = walkTo(f, 24, 150, 1600, 120, 6, 0.3);
 	const rub = env(f, 0, 40, 6, 10);
 	const hp = gesture('touchFace', hw.pose, rub, f);
-	const cam = camPath(f, [[0, camOn(520, 580, 1.25)], [130, camOn(950, 580, 1.25)]]);
+	const cam = camPath(f, [[0, camOn(760, 580, 1.0)], [160, camOn(800, 570, 1.2)]]);
 	return (
 		<Stage cam={cam} bg="#f3e6c4" light={WARM}>
 			<Layer depth={1.6}>
@@ -520,9 +536,12 @@ const S15: React.FC = () => {
 					<Plate x={hw.x} />
 				</Svg>
 			</Layer>
-			<Layer depth={0.85}>
+			<Layer depth={0.95}>
 				<Svg>
-					<Actor who="mom" x={mw.x} floor={FL + 30} s={1.15} facing={-1} faceTurn={0.2} look={[-1, 0.5]} pose={mw.pose} vx={mw.vx} bob={mw.bob} uid="m15" />
+					<Actor who="mom" x={mw.x} floor={FL + 14} s={1.08} facing={-1} faceTurn={0.2} look={[0, 1]} pose={{...mw.pose, head: mw.pose.head + 16, armF: [38, 70]}} vx={mw.vx * 0.25} bob={mw.bob} uid="m15" />
+					<g transform={`translate(${mw.x - 32},${hip(1.08) + 40})`}>
+						<rect x={-14} y={-22} width={28} height={42} rx={5} fill="#1b1e2a" stroke="#6f7bd8" strokeWidth={3} />
+					</g>
 				</Svg>
 			</Layer>
 		</Stage>
@@ -541,6 +560,7 @@ const S16: React.FC = () => {
 	const refl = <Actor who="hero" x={550} floor={700} s={0.8} facing={-1} faceTurn={0.15} look={[0, 0]} pose={mp} uid="r16" shadow={false} />;
 	const cam = camPath(f, [[0, camOn(980, 560, 1.15)], [a + 90, camOn(1030, 600, 1.55)]]);
 	return (
+		<>
 		<Stage cam={cam} bg="#efe4d0" light={WARM}>
 			<Layer depth={1.5}>
 				<Barber f={gf} reflect={refl} />
@@ -556,16 +576,19 @@ const S16: React.FC = () => {
 						if (u < 0 || u > 1.4) return null;
 						return <rect key={i} x={940 + (random('hx' + i) - 0.5) * 120 + u * (random('hy' + i) - 0.5) * 100} y={570 + u * u * 300} width={22} height={7} rx={3} fill="#3a2a1c" transform={`rotate(${u * 160 * (random('hr' + i) - 0.5)} 950 600)`} opacity={u > 1 ? 0 : 1} />;
 					})}
-					{f > a + 100 ? (
-						<Bubble x={1240} y={300} w={760} h={140} t={f - (a + 100)} tail={[-10, 100]}>
-							<text y={20} textAnchor="middle" fontSize={64} fontFamily={FONT} fontWeight={800} fill="#10132a">
-								Совсем другое дело.
-							</text>
-						</Bubble>
-					) : null}
 				</Svg>
 			</Layer>
 		</Stage>
+		<Screen>
+			{f > a + 100 ? (
+				<Bubble x={1340} y={190} w={880} h={150} t={f - (a + 100)} tail={[-120, 110]}>
+					<text y={22} textAnchor="middle" fontSize={72} fontFamily={FONT} fontWeight={800} fill="#10132a">
+						Совсем другое дело.
+					</text>
+				</Bubble>
+			) : null}
+		</Screen>
+		</>
 	);
 };
 
@@ -620,6 +643,7 @@ const S18: React.FC = () => {
 	const hp: Pose = { ...SIT, lean: -2, head: 4 + 10 * k(f, a28, a28 + 20) };
 	const cam = camPath(f, [[0, camOn(1000, 600, 1.15)], [a27 + 100, camOn(1300, 560, 1.2)], [a28, camOn(1050, 590, 1.25)]]);
 	return (
+		<>
 		<Stage cam={cam} bg="#2a2a48" light={{x: 20, y: 10, o: 0.4}}>
 			<Layer depth={1.6}>
 				<Kitchen night />
@@ -644,17 +668,20 @@ const S18: React.FC = () => {
 					<Actor who="hero" x={820} floor={FL} seat={790} s={HS} facing={1} faceTurn={0.4} look={f < a28 ? [0.8, 0] : [0.2, 0.9]} expr={f < a28 ? 'normal' : 'sad'} pose={hp} uid="h18" />
 					<Plate x={820} yy={440} s={1.8} />
 					<Actor who="sis" x={sx} floor={FL} s={1} facing={f < a27 + 100 ? -1 : 1} faceTurn={0.5} look={[0, 0]} pose={sp} vx={run.vx} bob={run.bob} uid="s18" />
-					{f > a27 + 128 && f < a28 + 70 ? (
-						<Bubble x={1200} y={240} w={900} h={140} t={f - (a27 + 128)} tail={[260, 110]}>
-							<text y={20} textAnchor="middle" fontSize={60} fontFamily={FONT} fontWeight={800} fill="#10132a">
-								Дроби в следующий вторник!
-							</text>
-						</Bubble>
-					) : null}
 					<Onoma x={1700} y={460} text="ХЛОП!" t={f - (a28 + 54)} c="#ffd36a" size={90} />
 				</Svg>
 			</Layer>
 		</Stage>
+		<Screen>
+			{f > a27 + 120 && f < a28 + 70 ? (
+				<Bubble x={1220} y={180} w={1200} h={160} t={f - (a27 + 120)} tail={[330, 120]}>
+					<text y={24} textAnchor="middle" fontSize={76} fontFamily={FONT} fontWeight={800} fill="#10132a">
+						Дроби в следующий вторник!
+					</text>
+				</Bubble>
+			) : null}
+		</Screen>
+		</>
 	);
 };
 
@@ -670,7 +697,7 @@ const S19: React.FC = () => {
 	const midnight = k(f, a30 + 10, a30 + 24);
 	const cut = f >= a30 + 150;
 	const shift = f >= a30 + 215;
-	const burned = [1, ...(cut ? [2] : [])];
+	const burned = [1, 2];
 	return (
 		<>
 			<Stage cam={cam} bg="#1d2550" light={{x: 20, y: 10, o: 0.25}}>
@@ -691,16 +718,16 @@ const S19: React.FC = () => {
 			{bd > 0 ? (
 				<AbsoluteFill style={{opacity: bd}}>
 					<Board tint="#141a48">
-						<AgeBadge x={960} y={130} value={counterAt(gf)} s={1.7} label="СВОБОДНЫХ ВЕЧЕРОВ" />
-						<Ribbon t={f} burned={burned} cursor={shift ? 3 : 2} mine={[cut ? 3 : 2, 30]} showMoon={f >= a30 + 10 && f < a30 + 150 ? midnight : shift ? 1 : 0} />
-						{f >= a30 + 150 && !shift ? <Ico k="scissors" x={330} y={455} s={1.2} /> : null}
+						<AgeBadge x={960} y={120} value={counterAt(gf)} s={2.3} label="СВОБОДНЫХ ВЕЧЕРОВ" />
+						<Ribbon t={f} burned={burned} cursor={shift ? 3 : 2} mine={[3, 30]} showMoon={f >= a30 + 10 && f < a30 + 150 ? midnight : shift ? 1 : 0} />
+						<Ico k="scissors" x={150} y={470} s={0.7} />
 						<Plaque
 							x={960}
-							y={830}
-							w={shift ? 1500 : f >= a30 + 150 ? 1740 : f >= a30 + 10 ? 1300 : 760}
-							h={140}
-							text={shift ? 'ПОЛНОЧЬ: СЧЁТ 28 НЕ МЕНЯЕТСЯ' : f >= a30 + 150 ? 'СТРИЖКА → БЛИЖАЙШИЙ: СЕГОДНЯ' : f >= a30 + 10 ? 'ПОЛНОЧЬ ЗАБИРАЕТ ВЕЧЕР' : 'ТВОИ — ЖЁЛТЫЕ'}
-							size={72}
+							y={860}
+							w={shift ? 1780 : f >= a30 + 150 ? 1840 : f >= a30 + 10 ? 1500 : 1000}
+							h={150}
+							text={shift ? 'ПОЛНОЧЬ: СЧЁТ 28 НЕ МЕНЯЕТСЯ' : f >= a30 + 150 ? 'СТРИЖКА → СЕГОДНЯ' : f >= a30 + 10 ? 'ПОЛНОЧЬ ЗАБИРАЕТ ВЕЧЕР' : 'ТВОИ — ЖЁЛТЫЕ'}
+							size={90}
 							c={shift ? '#5fe08a' : f >= a30 + 150 ? '#ff9a6a' : '#ffd34a'}
 						/>
 					</Board>
@@ -753,7 +780,8 @@ const S21: React.FC = () => {
 	const hpose: Pose = reach(slouch(idle(gf, 3), 0.8), 'F', toLocal(740, 340, 700, hip(HS), HS, 1), pt);
 	const sp = useSpeaking(gf);
 	const wide = camOn(960, 560, 1.05);
-	const cam = sp === 'TEMA' ? camOn(1060, 540, 1.25, {farBlur: 5}) : sp === 'HERO' ? camOn(800, 520, 1.35, {farBlur: 5}) : wide;
+	const gz = 1 + 0.0006 * f;
+	const cam = sp === 'TEMA' ? camOn(1060, 540, 1.25 * gz, {farBlur: 5}) : sp === 'HERO' ? camOn(800, 520, 1.35 * gz, {farBlur: 5}) : camOn(960, 560, 1.05 * gz);
 	const book = k(f, a34 + 24, a34 + 40);
 	const write = k(f, a34 + 44, a34 + 80);
 	const bun = hands(tpose, tw.x, 1, -1).f;
@@ -765,7 +793,7 @@ const S21: React.FC = () => {
 			<Layer depth={1}>
 				<Svg>
 					<Actor who="hero" x={700} floor={FL} s={HS} facing={1} faceTurn={0.4} look={[0.8, 0.3]} expr="worried" pose={hpose} uid="h21" />
-					<Plate x={700} yy={400} s={1.8} />
+					<Plate x={700} yy={400} s={1.6} />
 					<Actor who="tema" x={tw.x} floor={FL} s={1} facing={-1} faceTurn={0.5} look={[-0.8, 0]} pose={tpose} vx={tw.vx} bob={tw.bob} uid="t21" />
 					<ellipse cx={bun[0]} cy={bun[1]} rx={26} ry={18} fill="#d9a05a" stroke="#10132a" strokeWidth={4} />
 					{book > 0 ? (
@@ -794,7 +822,7 @@ const S22: React.FC = () => {
 	const tpose: Pose = reach(idle(gf, 5), 'F', [24, -128], bite);
 	const under = k(f, 50, 80);
 	const bun = hands(tpose, 1150, 1, -1).f;
-	const cam = camPath(f, [[0, camOn(1250, 560, 1.5)], [90, camOn(1330, 540, 1.8)]]);
+	const cam = camPath(f, [[0, camOn(1150, 560, 1.15)], [40, camOn(1300, 560, 1.4)], [95, camOn(1400, 540, 1.7)]]);
 	return (
 		<Stage cam={cam} bg="#7fc0ea" light={WARM}>
 			<Layer depth={1.6}>
@@ -804,7 +832,7 @@ const S22: React.FC = () => {
 				<Svg>
 					<Actor who="tema" x={1150} floor={FL} s={1} facing={-1} faceTurn={0.5} look={[-0.2, 0.2]} pose={tpose} uid="t22" />
 					<ellipse cx={bun[0]} cy={bun[1]} rx={26} ry={18} fill="#d9a05a" stroke="#10132a" strokeWidth={4} />
-					<g transform="translate(1600,600) rotate(-4)">
+					<g transform="translate(1560,600) rotate(-4)">
 						<rect x={-230} y={-130} width={460} height={260} rx={14} fill="#fbf8ef" stroke="#10132a" strokeWidth={6} />
 						<text y={40} textAnchor="middle" fontSize={96} fontFamily={HAND} fontWeight={700} fill="#10132a">
 							Правило 1

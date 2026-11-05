@@ -9,7 +9,7 @@ export type CastMember = Base & {sp?: string};
 
 export const CAST: Record<string, CastMember> = {
 	hero: {color: '#f2b21c', hair: 'short', rim: '#fff0cc', rimW: 2.4},
-	heroSuit: {color: '#f2b21c', outfit: 'suit', hair: 'short', rim: '#fff0cc', rimW: 2.4, sp: 'HERO'},
+	heroSuit: {color: '#2f6fd8', outfit: 'suit', hair: 'short', rim: '#fff0cc', rimW: 2.4, sp: 'HERO'},
 	tema: {color: '#d94a3a', hair: 'cap', hairColor: '#2f6fd8', rim: '#ffe0c8', rimW: 2.4, shoe: '#f2f2f2'},
 	vovan: {color: '#2f8f5a', outfit: 'tee', hair: 'none', rim: '#e8fff2', rimW: 2.4, shoe: '#111'},
 	bro: {color: '#2f6fd8', hair: 'short', hairColor: '#5a3a22', rim: '#e6f0ff', rimW: 2.4, shoe: '#f2f2f2'},

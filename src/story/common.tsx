@@ -1,4 +1,5 @@
 import React from 'react';
+import {AbsoluteFill} from 'remotion';
 import {interpolate} from 'remotion';
 import {Pose, RIG, rigPoints, toLocal} from '../engine/Stickman';
 import {reach} from '../kit/actions';
@@ -76,3 +77,32 @@ export const Plate: React.FC<{x: number; yy?: number; s?: number; warn?: boolean
 	return <Tag x={x} y={yy} value={counterAt(gf)} f={gf} s={s} pop={pop} heart={false} warn={warn} />;
 };
 export const label = STORY.counter?.label;
+
+// everything drawn here stays in the frame (screen space, 1920×1080) whatever the camera does
+export const Screen: React.FC<{children: React.ReactNode}> = ({children}) => (
+	<AbsoluteFill style={{pointerEvents: 'none'}}>
+		<svg viewBox="0 0 1920 1080" width={1920} height={1080}>
+			{children}
+		</svg>
+	</AbsoluteFill>
+);
+// Mitya in his brother's jacket: sleeves too long (cuffs cover the hands), a note sticks out of the pocket
+export const JACKET = '#2f6fd8';
+export const Jacket: React.FC<{p: Pose; x: number; facing: 1 | -1; s?: number; seat?: number}> = ({p, x, facing, s = HS, seat}) => {
+	const h = hands(p, x, s, facing);
+	const dy = seat !== undefined ? seat - hip(s) : 0;
+	return (
+		<g>
+			{[h.b, h.f].map((q, i) => (
+				<g key={i}>
+					<ellipse cx={q[0]} cy={q[1] + dy} rx={30 * s} ry={22 * s} fill={JACKET} stroke="#10132a" strokeWidth={4} transform={`rotate(${facing * 20} ${q[0]} ${q[1] + dy})`} />
+					<rect x={q[0] - 8 * s + facing * 14 * s} y={q[1] + dy - 4 * s} width={14 * s} height={9 * s} rx={4} fill="#ffe0bd" stroke="#10132a" strokeWidth={2.5} />
+				</g>
+			))}
+			<g transform={`translate(${x + facing * 22 * s},${hip(s) + dy - 96 * s})`}>
+				<rect x={-18 * s} y={0} width={36 * s} height={30 * s} rx={4} fill="#1f4fae" stroke="#10132a" strokeWidth={3} />
+				<rect x={-10 * s} y={-24 * s} width={26 * s} height={34 * s} fill="#fbf8ef" stroke="#10132a" strokeWidth={3} transform="rotate(10)" />
+			</g>
+		</g>
+	);
+};
