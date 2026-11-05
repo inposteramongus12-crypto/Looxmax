@@ -91,12 +91,18 @@ export const JACKET = '#2f6fd8';
 export const Jacket: React.FC<{p: Pose; x: number; facing: 1 | -1; s?: number; seat?: number}> = ({p, x, facing, s = HS, seat}) => {
 	const h = hands(p, x, s, facing);
 	const dy = seat !== undefined ? seat - hip(s) : 0;
+	const arm = (q: [number, number], a: [number, number]) => {
+		const d = dirA(a[0] + a[1]);
+		const v: [number, number] = [d[0] * facing, d[1]];
+		const rot = (Math.atan2(v[1], v[0]) * 180) / Math.PI;
+		return {c: [q[0] - v[0] * 12 * s, q[1] + dy - v[1] * 12 * s], hand: [q[0] + v[0] * 20 * s, q[1] + dy + v[1] * 20 * s], rot};
+	};
 	return (
 		<g>
-			{[h.b, h.f].map((q, i) => (
+			{[arm(h.b, p.armB), arm(h.f, p.armF)].map((a, i) => (
 				<g key={i}>
-					<ellipse cx={q[0]} cy={q[1] + dy} rx={30 * s} ry={22 * s} fill={JACKET} stroke="#10132a" strokeWidth={4} transform={`rotate(${facing * 20} ${q[0]} ${q[1] + dy})`} />
-					<rect x={q[0] - 8 * s + facing * 14 * s} y={q[1] + dy - 4 * s} width={14 * s} height={9 * s} rx={4} fill="#ffe0bd" stroke="#10132a" strokeWidth={2.5} />
+					<circle cx={a.hand[0]} cy={a.hand[1]} r={13 * s} fill="#ffe0bd" stroke="#10132a" strokeWidth={3.5} />
+					<rect x={-34 * s} y={-19 * s} width={68 * s} height={38 * s} rx={16 * s} fill={JACKET} stroke="#10132a" strokeWidth={4} transform={`translate(${a.c[0]},${a.c[1]}) rotate(${a.rot})`} />
 				</g>
 			))}
 			<g transform={`translate(${x + facing * 22 * s},${hip(s) + dy - 96 * s})`}>

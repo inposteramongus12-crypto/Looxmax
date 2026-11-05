@@ -34,6 +34,18 @@ const Steam: React.FC<{x: number; y: number; f: number; on: number; z?: number}>
 );
 
 /* ---- 001–002 · кухня, 21:40, табличка 0 мигает, свет, чайник, три чашки ---- */
+/* a steel kettle (so the only cups on the table are the three mugs) — drawn over the kitchen's white one */
+const Kettle: React.FC<{f: number; on?: number; night?: boolean}> = ({f, on = 1, night}) => (
+	<g>
+		<rect x={228} y={540} width={140} height={100} fill={night ? '#3d3a5c' : '#fbf3dc'} opacity={0.97} />
+		<path d="M236,646 L236,606 Q236,560 296,556 Q358,560 358,606 L358,646 Z" fill="#8c96ad" stroke="#10132a" strokeWidth={5} />
+		<path d="M236,612 L204,572 L218,562 L246,590 Z" fill="#8c96ad" stroke="#10132a" strokeWidth={5} />
+		<path d="M252,566 Q297,505 346,566" fill="none" stroke="#10132a" strokeWidth={12} strokeLinecap="round" />
+		<circle cx={296} cy={552} r={9} fill="#10132a" />
+		<rect x={252} y={600} width={14} height={36} rx={6} fill="#fff" opacity={0.25} />
+		<Steam x={206} y={556} f={f} on={on} />
+	</g>
+);
 const CupSteam: React.FC<{f: number}> = ({f}) => (
 	<g>
 		{[860, 1060, 1260].map((cx, i) => (
@@ -53,16 +65,16 @@ const S1: React.FC = () => {
 	let p: Pose = f < a2 + 36 ? idle(gf, 1) : mv.pose;
 	p = reach(p, 'F', toLocal(1400, 560, HX, hip(HS), HS, 1), sw);
 	const cam = camPath(f, [
-		[0, camOn(1100, 520, 1.3)],
-		[a2 - 10, camOn(1230, 440, 1.7)],
-		[a2 + 40, camOn(1180, 600, 1.25)],
-		[a2 + 100, camOn(980, 660, 1.35)],
+		[0, camOn(1150, 520, 1.3)],
+		[a2 - 10, camOn(1150, 440, 1.6)],
+		[a2 + 40, camOn(1150, 600, 1.25)],
+		[a2 + 100, camOn(1050, 660, 1.3)],
 	]);
 	return (
 		<>
 		<Stage cam={cam} bg="#14152e" light={{x: 20, y: 10, o: 0.3 + 0.2 * (1 - dark)}}>
 			<Layer depth={1.6}>
-				<Kitchen night />
+				<><Kitchen night /><Svg><Kettle f={f} night /></Svg></>
 			</Layer>
 			<Layer depth={1.25}>
 				<KitchenTable night mugs={3} />
@@ -71,7 +83,6 @@ const S1: React.FC = () => {
 				<Svg>
 					<rect x={1388} y={520} width={24} height={64} rx={6} fill="#e8e4d8" stroke="#10132a" strokeWidth={4} />
 					<rect x={-700} y={-400} width={3300} height={1500} fill="#04051a" opacity={dark} />
-					<Steam x={285} y={560} f={f} on={1} />
 					<CupSteam f={f} />
 					<Onoma x={1420} y={500} text="ЩЕЛК" t={f - lightT} c="#fff3b0" size={60} />
 				</Svg>
@@ -85,7 +96,7 @@ const S1: React.FC = () => {
 			</Layer>
 		</Stage>
 		<Screen>
-			<Plaque x={300} y={150} w={400} h={150} text="21:40" size={110} c="#ff9a6a" />
+			<Plaque x={300} y={930} w={400} h={150} text="21:40" size={110} c="#ff9a6a" />
 		</Screen>
 		</>
 	);
@@ -108,7 +119,7 @@ const S2: React.FC = () => {
 	return (
 		<Stage cam={cam} bg="#14152e" light={{x: 20, y: 10, o: 0.5}}>
 			<Layer depth={1.6}>
-				<Kitchen night />
+				<><Kitchen night /><Svg><Kettle f={f} night /></Svg></>
 			</Layer>
 			<Layer depth={1.25}>
 				<KitchenTable night mugs={3} />
@@ -121,7 +132,7 @@ const S2: React.FC = () => {
 					<CupSteam f={f} />
 					<Jacket p={hp} x={HX} facing={1} />
 					{pop > 0 ? (
-						<g transform={`translate(${HX + 400},520) rotate(-4) scale(${0.6 + 0.4 * pop})`} opacity={pop}>
+						<g transform={`translate(${HX + 380},700) rotate(-4) scale(${0.6 + 0.4 * pop})`} opacity={pop}>
 							<rect x={-230} y={-90} width={460} height={180} rx={14} fill="#fbf8ef" stroke="#10132a" strokeWidth={6} />
 							<text y={34} textAnchor="middle" fontSize={120} fontFamily={HAND} fontWeight={700} fill="#10132a">
 								надень
@@ -139,7 +150,7 @@ const S3: React.FC = () => {
 	const {f, gf, at} = useShot();
 	const cam = camPath(f, [
 		[0, camOn(300, 520, 1.7)],
-		[at('005') + 50, camOn(1250, 580, 1.3)],
+		[at('005') + 22, camOn(1250, 580, 1.25)],
 		[at('006') + 20, camOn(1500, 560, 1.15)],
 	]);
 	const look = k(f, at('005') + 30, at('005') + 70);
@@ -147,15 +158,13 @@ const S3: React.FC = () => {
 		<>
 		<Stage cam={cam} bg="#14152e" light={{x: 20, y: 10, o: 0.5}}>
 			<Layer depth={1.6}>
-				<Kitchen night />
+				<><Kitchen night /><Svg><Kettle f={f} night /></Svg></>
 			</Layer>
 			<Layer depth={1.25}>
 				<KitchenTable night mugs={3} />
 			</Layer>
 			<Layer depth={1.1}>
 				<Svg>
-					<Steam x={285} y={560} f={f} on={1} />
-					<Steam x={285} y={560} f={f + 19} on={0.8} />
 					<CupSteam f={f} />
 					<rect x={1790} y={300} width={200} height={600} rx={8} fill="#8a6a44" stroke="#10132a" strokeWidth={6} />
 					<circle cx={1830} cy={620} r={14} fill="#ffd34a" />
@@ -203,7 +212,7 @@ const S5: React.FC = () => {
 		<>
 		<Stage cam={cam} bg="#14152e" light={{x: 20, y: 10, o: 0.4}}>
 			<Layer depth={1.6}>
-				<Kitchen night />
+				<><Kitchen night /><Svg><Kettle f={f} night /></Svg></>
 			</Layer>
 			<Layer depth={1.25}>
 				<g transform={`translate(${mx},${-rew * 220})`} opacity={1 - rew * 0.6}>
@@ -332,7 +341,7 @@ const S9: React.FC = () => {
 	return (
 		<Board tint="#1a2150">
 			<g opacity={pl}>
-				<Plaque x={960} y={150} w={1100} h={150} text="ПРИНСТОН, 2006" size={104} c="#ffd34a" />
+				<Plaque x={960} y={185} w={1100} h={150} text="ПРИНСТОН, 2006" size={104} c="#ffd34a" />
 			</g>
 			<g transform="translate(520,640)">
 				<circle r={250} fill="#11142c" stroke="#ffd34a" strokeWidth={14} />
@@ -361,19 +370,19 @@ const S10: React.FC = () => {
 	const st = k(f, 130, 146);
 	return (
 		<Board tint="#1a2150">
-			<g transform="translate(380,520)">
+			<g transform="translate(380,470)">
 				<rect x={-250} y={-250} width={500} height={500} rx={28} fill="#fff6dc" stroke="#8a92d8" strokeWidth={8} />
 				<Face x={0} y={0} s={2.8} />
 				<Plaque x={0} y={330} w={300} h={110} text="0,1 с" size={80} />
 			</g>
-			<g transform="translate(960,560)">
+			<g transform="translate(960,510)">
 				<text y={-300} textAnchor="middle" fontSize={64} fontFamily={FONT} fontWeight={900} fill="#5fe08a">
 					УВЕРЕННОСТЬ
 				</text>
 				<rect x={-60} y={-250} width={120} height={500} rx={30} fill="#11142c" stroke="#5fe08a" strokeWidth={6} />
 				<rect x={-48} y={250 - 480 * conf - 10} width={96} height={480 * conf} rx={24} fill="#5fe08a" />
 			</g>
-			<g transform="translate(1500,560)">
+			<g transform="translate(1500,510)">
 				<text y={-300} textAnchor="middle" fontSize={64} fontFamily={FONT} fontWeight={900} fill="#ffd34a">
 					МНЕНИЕ
 				</text>
@@ -384,7 +393,7 @@ const S10: React.FC = () => {
 					стоит
 				</text>
 			</g>
-			<g opacity={st} transform={`translate(1130,${870 - (1 - st) * 20})`}>
+			<g opacity={st} transform={`translate(1130,${780 - (1 - st) * 20})`}>
 				<Plaque x={0} y={0} w={880} h={110} text="верным не становится" size={60} c="#ff6a5a" />
 			</g>
 			<SchemeNote />
@@ -412,15 +421,15 @@ const S12: React.FC = () => {
 	const sit = f < a19 + 6;
 	const mate = k(f, at('018') + 20, at('018') + 44);
 	const press = a19 + 98;
-	const walk = walkTo(f, a19 + 8, a19 + 86, 700, 1700, 4, 0.3);
+	const walk = walkTo(f, a19 + 8, a19 + 86, 700, 1520, 4, 0.3);
 	const sw = env(f, a19 + 90, a19 + 112, 6, 8);
 	const gp: Pose = sit
 		? reach({...SIT, head: 0}, 'F', toLocal(1020, 660, 700, 790, 1, 1), env(f, at('018') + 14, at('018') + 60, 8, 20))
-		: reach(walk.pose, 'F', toLocal(1790, 560, 1700, hip(1), 1, 1), sw);
+		: reach(walk.pose, 'F', toLocal(1620, 560, 1520, hip(1), 1, 1), sw);
 	const dark = interpolate(f, [press, press + 12], [0, 0.72], clamp);
 	const clock = f < press ? '21:25' : '21:30';
 	const card = k(f, a19 + 128, a19 + 144);
-	const cam = camPath(f, [[0, camOn(900, 600, 1.35)], [a19, camOn(960, 560, 1.15)], [a19 + 60, camOn(1380, 560, 1.2)], [a19 + 130, camOn(1150, 540, 1.1)]]);
+	const cam = camPath(f, [[0, camOn(900, 600, 1.35)], [a19, camOn(960, 560, 1.15)], [a19 + 60, camOn(1250, 580, 1.1)], [a19 + 130, camOn(1250, 570, 1.05)]]);
 	return (
 		<>
 		<Stage cam={cam} bg="#2a2038" light={{x: 20, y: 10, o: 0.35}}>
@@ -430,6 +439,7 @@ const S12: React.FC = () => {
 			<Layer depth={1.2}>
 				<Svg>
 					<Chair x={700} y={800} facing={1} />
+					<rect x={1612} y={520} width={26} height={60} rx={6} fill="#e8e4d8" stroke="#10132a" strokeWidth={4} />
 					<Ico k="knight" x={interpolate(mate, [0, 1], [900, 1020])} y={interpolate(mate, [0, 1], [520, 640])} s={0.9} />
 					<Onoma x={1020} y={560} text="МАТ!" t={f - (at('018') + 46)} c="#ffd36a" size={84} />
 				</Svg>
@@ -470,20 +480,20 @@ const S13: React.FC = () => {
 	const w = k(f, 100, 116);
 	return (
 		<Board tint="#1a2150">
-			<g transform={`translate(560,560) scale(${0.7 + 0.3 * u})`} opacity={u}>
+			<g transform={`translate(480,540) scale(${0.7 + 0.3 * u})`} opacity={u}>
 				<rect x={-330} y={-400} width={660} height={800} rx={44} fill="#fff6dc" stroke="#ffd34a" strokeWidth={10} />
 				<text y={-170} textAnchor="middle" fontSize={260} fontFamily={FONT} fontWeight={900} fill="#10132a">
 					30
 				</text>
 				<Ico k="suitcase" x={0} y={110} s={3.4} />
 			</g>
-			<g opacity={v} transform={`translate(1380,430)`}>
-				<Plaque x={-20} y={0} w={960} h={190} text="ПРОВОДЫ 19:00" size={104} c="#ffd34a" />
+			<g opacity={v} transform={`translate(1270,400)`}>
+				<Plaque x={0} y={0} w={880} h={190} text="ПРОВОДЫ 19:00" size={100} c="#ffd34a" />
 			</g>
-			<g opacity={w} transform="translate(1380,690)">
+			<g opacity={w} transform="translate(1270,660)">
 				<Plaque x={0} y={0} w={560} h={130} text="БРОНЬ ✓" size={84} c="#5fe08a" />
 			</g>
-			<Mini x={1700} y={850} c="#2f6fd8" hair="#5a3a22" s={1.6} label="БРАТ" />
+			<Mini x={1620} y={780} c="#2f6fd8" hair="#5a3a22" s={1.5} label="БРАТ" />
 		</Board>
 	);
 };
@@ -528,7 +538,7 @@ const S15: React.FC = () => {
 	return (
 		<Stage cam={cam} bg="#f3e6c4" light={WARM}>
 			<Layer depth={1.6}>
-				<Kitchen />
+				<><Kitchen /><Svg><Kettle f={f} /></Svg></>
 			</Layer>
 			<Layer depth={1}>
 				<Svg>
@@ -581,7 +591,7 @@ const S16: React.FC = () => {
 		</Stage>
 		<Screen>
 			{f > a + 100 ? (
-				<Bubble x={1340} y={190} w={880} h={150} t={f - (a + 100)} tail={[-120, 110]}>
+				<Bubble x={1240} y={190} w={840} h={150} t={f - (a + 100)} tail={[-120, 110]}>
 					<text y={22} textAnchor="middle" fontSize={72} fontFamily={FONT} fontWeight={800} fill="#10132a">
 						Совсем другое дело.
 					</text>
@@ -646,7 +656,7 @@ const S18: React.FC = () => {
 		<>
 		<Stage cam={cam} bg="#2a2a48" light={{x: 20, y: 10, o: 0.4}}>
 			<Layer depth={1.6}>
-				<Kitchen night />
+				<><Kitchen night /><Svg><Kettle f={f} night /></Svg></>
 			</Layer>
 			<Layer depth={1.25}>
 				<KitchenTable night mugs={0} />
@@ -718,16 +728,16 @@ const S19: React.FC = () => {
 			{bd > 0 ? (
 				<AbsoluteFill style={{opacity: bd}}>
 					<Board tint="#141a48">
-						<AgeBadge x={960} y={120} value={counterAt(gf)} s={2.3} label="СВОБОДНЫХ ВЕЧЕРОВ" />
+						<AgeBadge x={960} y={180} value={counterAt(gf)} s={2.0} label="СВОБОДНЫХ ВЕЧЕРОВ" />
 						<Ribbon t={f} burned={burned} cursor={shift ? 3 : 2} mine={[3, 30]} showMoon={f >= a30 + 10 && f < a30 + 150 ? midnight : shift ? 1 : 0} />
 						<Ico k="scissors" x={150} y={470} s={0.7} />
 						<Plaque
 							x={960}
-							y={860}
-							w={shift ? 1780 : f >= a30 + 150 ? 1840 : f >= a30 + 10 ? 1500 : 1000}
+							y={820}
+							w={shift ? 1580 : f >= a30 + 150 ? 1580 : f >= a30 + 10 ? 1400 : 1000}
 							h={150}
-							text={shift ? 'ПОЛНОЧЬ: СЧЁТ 28 НЕ МЕНЯЕТСЯ' : f >= a30 + 150 ? 'СТРИЖКА → СЕГОДНЯ' : f >= a30 + 10 ? 'ПОЛНОЧЬ ЗАБИРАЕТ ВЕЧЕР' : 'ТВОИ — ЖЁЛТЫЕ'}
-							size={90}
+							text={shift ? 'ПОЛНОЧЬ: СЧЁТ 28 НЕ МЕНЯЕТСЯ' : f >= a30 + 150 ? 'СТРИЖКА → БЛИЖАЙШИЙ: СЕГОДНЯ' : f >= a30 + 10 ? 'ПОЛНОЧЬ ЗАБИРАЕТ ВЕЧЕР' : 'ТВОИ — ЖЁЛТЫЕ'}
+							size={84}
 							c={shift ? '#5fe08a' : f >= a30 + 150 ? '#ff9a6a' : '#ffd34a'}
 						/>
 					</Board>
@@ -781,7 +791,7 @@ const S21: React.FC = () => {
 	const sp = useSpeaking(gf);
 	const wide = camOn(960, 560, 1.05);
 	const gz = 1 + 0.0006 * f;
-	const cam = sp === 'TEMA' ? camOn(1060, 540, 1.25 * gz, {farBlur: 5}) : sp === 'HERO' ? camOn(800, 520, 1.35 * gz, {farBlur: 5}) : camOn(960, 560, 1.05 * gz);
+	const cam = sp === 'TEMA' ? camOn(960, 540, 1.15 * gz, {farBlur: 5}) : sp === 'HERO' ? camOn(780, 520, 1.3 * gz, {farBlur: 5}) : camOn(960, 560, 1.0 * gz);
 	const book = k(f, a34 + 24, a34 + 40);
 	const write = k(f, a34 + 44, a34 + 80);
 	const bun = hands(tpose, tw.x, 1, -1).f;
@@ -845,6 +855,7 @@ const S22: React.FC = () => {
 	);
 };
 
+import {SHOTS2} from './shots2';
 export const SHOTS: ShotDef[] = [
 	{at: '001', C: S1},
 	{at: '003', C: S2},
@@ -868,4 +879,5 @@ export const SHOTS: ShotDef[] = [
 	{at: '031', C: S20},
 	{at: '032', C: S21, whip: true},
 	{at: '035', C: S22},
+	...SHOTS2,
 ];

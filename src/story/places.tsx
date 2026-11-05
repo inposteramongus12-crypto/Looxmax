@@ -266,7 +266,7 @@ export const WEEK: Omit<Cell, 't'>[] = [
 export const WeekCal: React.FC<{t: number; times: number[]; open: number; burn?: number[]}> = ({t, times, open, burn = []}) => {
 	const k = interpolate(t, [0, open], [0.25, 1], {...clamp, easing: ease});
 	return (
-		<g transform={`translate(960,540) scale(${k}) translate(-960,-540)`}>
+		<g transform={`translate(960,540) scale(${k * 0.9}) translate(-960,-540)`}>
 			<rect x={40} y={110} width={1840} height={860} rx={60} fill="#0f1230" stroke="#6f7bd8" strokeWidth={8} />
 			<text x={960} y={215} textAnchor="middle" fontSize={84} fontFamily={FONT} fontWeight={900} fill="#fff">
 				МОЯ НЕДЕЛЯ
@@ -274,7 +274,7 @@ export const WeekCal: React.FC<{t: number; times: number[]; open: number; burn?:
 			{WEEK.map((w, i) => {
 				const on = t >= times[i];
 				const pop = interpolate(t, [times[i], times[i] + 10], [0.7, 1], {...clamp, easing: ease});
-				const x = 66 + i * 258;
+				const x = 62 + i * 258;
 				const dead = t >= (burn[i] ?? 1e9);
 				return (
 					<g key={i} transform={`translate(${x},0)`}>
@@ -305,7 +305,7 @@ export const Ribbon: React.FC<{t: number; burned: number[]; cursor: number; mine
 	const cell = (n: number) => {
 		const row = n <= 15 ? 0 : 1;
 		const col = (n - 1) % 15;
-		return {x: 34 + col * 124, y: 330 + row * 190};
+		return {x: 150 + col * 108, y: 360 + row * 190};
 	};
 	return (
 		<g>
@@ -316,26 +316,26 @@ export const Ribbon: React.FC<{t: number; burned: number[]; cursor: number; mine
 				const mineOn = n >= mine[0] && n <= mine[1];
 				return (
 					<g key={n}>
-						<rect x={p.x} y={p.y} width={116} height={130} rx={18} fill={dead ? '#2a1c1c' : mineOn ? '#fff6dc' : '#242a64'} stroke={dead ? '#ff6a3a' : mineOn ? '#ffd34a' : '#4a52a0'} strokeWidth={dead ? 6 : 5} />
-						<text x={p.x + 58} y={p.y + 90} textAnchor="middle" fontSize={72} fontFamily={FONT} fontWeight={900} fill={dead ? '#ff9a6a' : mineOn ? '#10132a' : '#8a92d8'}>
+						<rect x={p.x} y={p.y} width={100} height={130} rx={18} fill={dead ? '#2a1c1c' : mineOn ? '#fff6dc' : '#242a64'} stroke={dead ? '#ff6a3a' : mineOn ? '#ffd34a' : '#4a52a0'} strokeWidth={dead ? 6 : 5} />
+						<text x={p.x + 50} y={p.y + 90} textAnchor="middle" fontSize={60} fontFamily={FONT} fontWeight={900} fill={dead ? '#ff9a6a' : mineOn ? '#10132a' : '#8a92d8'}>
 							{n}
 						</text>
-						{dead ? <path d={`M${p.x + 14},${p.y + 20} L${p.x + 102},${p.y + 112} M${p.x + 102},${p.y + 20} L${p.x + 14},${p.y + 112}`} stroke="#ff6a3a" strokeWidth={8} strokeLinecap="round" /> : null}
+						{dead ? <path d={`M${p.x + 14},${p.y + 20} L${p.x + 86},${p.y + 112} M${p.x + 86},${p.y + 20} L${p.x + 14},${p.y + 112}`} stroke="#ff6a3a" strokeWidth={8} strokeLinecap="round" /> : null}
 					</g>
 				);
 			})}
-			{(() => {
+			{cursor > 0 ? (() => {
 				const p = cell(cursor);
 				return (
-					<g transform={`translate(${p.x + 58},${p.y - 24})`}>
+					<g transform={`translate(${p.x + 50},${p.y - 24})`}>
 						<path d="M-18,-28 L0,0 L18,-28 Z" fill="#5fe08a" />
 						<text y={-40} textAnchor="middle" fontSize={58} fontFamily={FONT} fontWeight={900} fill="#5fe08a" stroke="#10132a" strokeWidth={8} paintOrder="stroke">
 							СЕГОДНЯ
 						</text>
 					</g>
 				);
-			})()}
-			{showMoon > 0 ? <Ico k="moon" x={cell(cursor).x + 98} y={cell(cursor).y + 20} s={0.5 * showMoon} /> : null}
+			})() : null}
+			{showMoon > 0 ? <Ico k="moon" x={cell(cursor).x + 84} y={cell(cursor).y + 20} s={0.5 * showMoon} /> : null}
 		</g>
 	);
 };
@@ -352,8 +352,8 @@ export const Plaque: React.FC<{x: number; y: number; w: number; h: number; text:
 /* подпись «схема, не измерения» — на схемах весь показ */
 export const SchemeNote: React.FC = () => (
 	<g>
-		<rect x={420} y={950} width={1080} height={100} rx={50} fill="#11142c" stroke="#ffd34a" strokeWidth={5} />
-		<text x={960} y={1015} textAnchor="middle" fontSize={76} fontFamily={FONT} fontWeight={800} fill="#ffd34a">
+		<rect x={440} y={850} width={1040} height={100} rx={50} fill="#11142c" stroke="#ffd34a" strokeWidth={5} />
+		<text x={960} y={918} textAnchor="middle" fontSize={76} fontFamily={FONT} fontWeight={800} fill="#ffd34a">
 			схема, не измерения
 		</text>
 	</g>
