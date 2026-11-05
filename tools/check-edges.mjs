@@ -1,5 +1,5 @@
 // Edge check: renders stills and finds plates / bubbles / cards closer than 60 px to the frame edge.
-//   node tools/check-edges.mjs --frames 100,200,300   |   --from 0 --to 4900 --step 25
+//   node tools/check-edges.mjs --frames 100,200,300   |   --from 0 --to 4900 --step 25   [--comp Short]
 // Plates are found by their dark-navy fill (#11142c), bubbles and cards by their cream fill; a cluster
 // inside the 60 px band is reported with the frame, the side and the clipped amount.
 import path from 'node:path';
@@ -18,7 +18,8 @@ const dir = path.join(ROOT, 'out', 'edge');
 fs.rmSync(dir, {recursive: true, force: true});
 fs.mkdirSync(dir, {recursive: true});
 const serveUrl = await bundle({entryPoint: path.join(ROOT, 'src', 'index.ts')});
-const comp = await selectComposition({serveUrl, id: 'Long', chromiumOptions: {gl: 'angle'}});
+const COMP = val('--comp', 'Long');
+const comp = await selectComposition({serveUrl, id: COMP, chromiumOptions: {gl: 'angle'}});
 for (const f of frames) await renderStill({composition: comp, serveUrl, output: path.join(dir, `f${String(f).padStart(6, '0')}.png`), frame: f, chromiumOptions: {gl: 'angle'}, scale: 0.5});
 const r = spawnSync('python3', ['-I', path.join(ROOT, 'tools', 'edge-scan.py'), dir], {encoding: 'utf8'});
 process.stdout.write(r.stdout + r.stderr);
