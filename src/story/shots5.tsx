@@ -303,10 +303,10 @@ const Dial: React.FC<{x: number; y: number; r: number; h: number; m: number; c?:
 /* ---- 168 · двадцать лет в 21:30 — и двадцать первый отдельно: 21:41 ---- */
 const X7: React.FC = () => {
 	const {f} = useShot();
-	const shown = Math.min(20, Math.floor(f / 3.5));
-	const dim = k(f, 78, 92);
-	const big = k(f, 84, 100);
-	const m = f < 100 ? 30 : interpolate(f, [100, 126], [30, 41], clamp);
+	const shown = Math.min(20, Math.floor(f / 2));
+	const dim = k(f, 92, 104);
+	const big = k(f, 96, 110);
+	const m = f < 110 ? 30 : interpolate(f, [110, 134], [30, 41], clamp);
 	return (
 		<Board tint="#141a48">
 			<g opacity={k(f, 2, 14) * (1 - dim)}>
@@ -664,6 +664,7 @@ const Y6: React.FC = () => {
 		</Board>
 	);
 };
+/* the month has 30 days and began on Monday, so the next one starts on Wednesday: 1 = ср, Thursdays are 2, 9, 16, 23, 30 */
 const PhoneGrid: React.FC<{f: number; a184: number}> = ({f, a184}) => (
 	<g>
 		<rect x={200} y={250} width={1520} height={660} rx={40} fill="#0f1230" stroke="#6f7bd8" strokeWidth={8} />
@@ -675,13 +676,15 @@ const PhoneGrid: React.FC<{f: number; a184: number}> = ({f, a184}) => (
 		{Array.from({length: 35}).map((_, i) => {
 			const r = Math.floor(i / 7);
 			const c = i % 7;
+			const n = i - 1; // day number: i = 2 (Wednesday of the first row) is day 1
+			if (n < 1 || n > 30) return <rect key={i} x={215 + c * 190} y={345 + r * 112} width={150} height={96} rx={18} fill="#12163a" stroke="#242a64" strokeWidth={3} />;
 			const th = c === 3;
 			const on = th && f > a184 + 10 + r * 14;
 			return (
 				<g key={i}>
 					<rect x={215 + c * 190} y={345 + r * 112} width={150} height={96} rx={18} fill={on ? '#fff6dc' : '#1c2150'} stroke={on ? '#ffd34a' : '#3a4180'} strokeWidth={4} />
 					<text x={226 + c * 190} y={on ? 384 + r * 112 : 404 + r * 112} fontSize={on ? 40 : 58} fontFamily={FONT} fontWeight={900} fill={on ? '#10132a' : '#7a84c8'}>
-						{i + 1 > 31 ? i - 30 : i + 1}
+						{n}
 					</text>
 					{on ? <Ico k="knight" x={290 + c * 190} y={398 + r * 112} s={0.98} /> : null}
 				</g>
