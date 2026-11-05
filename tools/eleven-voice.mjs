@@ -1,11 +1,11 @@
 // Voices src/story/lines.json with ElevenLabs -> public/vo/<id>.mp3 (same file names as voice-free).
-//   node tools/eleven-voice.mjs --plan              count characters still to voice, show credits on both keys, no voicing
+//   node tools/eleven-voice.mjs --plan              count characters still to voice, show credits on all keys, no voicing
 //   node tools/eleven-voice.mjs [--only 077,078]     voice (skips lines already voiced with the same text)
-//   node tools/eleven-voice.mjs ... --key1-only      never switch to the second key
+//   node tools/eleven-voice.mjs ... --key1-only      never switch to the other keys
 //   node tools/eleven-voice.mjs ... --force          re-voice even if already done
 // Voices come from src/story/voices.json: {"N": {"name": "George", "eleven": "<voice_id>"}, ...}.
-// Keys only from the environment (ELEVENLABS_API_KEY, ELEVENLABS_API_KEY_2); they are never printed or stored.
-// Before every line the remaining credits of key 1 are checked; if they do not cover the line, key 2 is used.
+// Keys only from the environment (ELEVENLABS_API_KEY, ELEVENLABS_API_KEY_2, ELEVENLABS_API_KEY_3); they are never printed or stored.
+// Before every line the remaining credits of key 1 are checked; if they do not cover the line, the next key (2, then 3) is used.
 // The subscription counter on ElevenLabs lags behind, so the remaining credits are also tracked locally
 // (credits at start minus characters sent) and the smaller of the two numbers is trusted.
 import fs from 'node:fs';
@@ -29,7 +29,7 @@ fs.mkdirSync(outDir, {recursive: true});
 const madeFile = path.join(outDir, '.made-eleven.json');
 const made = fs.existsSync(madeFile) ? JSON.parse(fs.readFileSync(madeFile, 'utf8')) : {};
 
-const KEYS = [process.env.ELEVENLABS_API_KEY, key1Only ? undefined : process.env.ELEVENLABS_API_KEY_2]
+const KEYS = [process.env.ELEVENLABS_API_KEY, key1Only ? undefined : process.env.ELEVENLABS_API_KEY_2, key1Only ? undefined : process.env.ELEVENLABS_API_KEY_3]
 	.map((k, i) => (k ? {n: i + 1, k, sent: 0, start: null} : null))
 	.filter(Boolean);
 if (!KEYS.length) throw new Error('ELEVENLABS_API_KEY is not set');
@@ -39,7 +39,7 @@ const ledger = fs.existsSync(ledgerFile) ? JSON.parse(fs.readFileSync(ledgerFile
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 const left = async (key) => {
 	let r;
-	for (let t = 0; t < 4; t++) {
+	for (let t = 0; t < 6; t++) {
 		r = await fetch('https://api.elevenlabs.io/v1/user/subscription', {headers: {'xi-api-key': key.k}});
 		if (r.status !== 429) break;
 		await sleep(2000 * 2 ** t);

@@ -7,8 +7,8 @@
 - [x] Общие помощники `Tag` / `Heart` / `heartColor` в `src/story/places.tsx`, `tsc --noEmit` без ошибок.
 - [x] План (11 частей), календарь, факты, чек-листы (10 пунктов из скилла и 11.4 — шесть пунктов).
 - [x] Сценарий `script.md`, части 1–11: **1686 слов, 10 429 знаков** озвученного текста (`node tools/count-script.mjs script.md`). Ориентир ≈ 11:30–12:00.
-- [ ] `lines.json` / `voices.json` — не начато (ждёт «да»).
-- [ ] Озвучка ElevenLabs — не запускалась.
+- [x] `src/story/lines.json` (187 реплик, `node tools/build-lines.mjs`) и `voices.json`: N George, HERO Liam, TEMA Will, GRANDPA Bill. `tools/eleven-voice.mjs` — три ключа (ELEVENLABS_API_KEY, _2, _3).
+- [ ] Озвучка ElevenLabs — только тесты по «да»; полная озвучка ждёт отдельного «да».
 - [ ] `config.ts`, `cast.ts` под сюжет, `places.tsx`, сцены `shots*.tsx`, раскадровка — не начато.
 - [ ] Звук (`sound.json`), рендер, превью — не начато.
 
