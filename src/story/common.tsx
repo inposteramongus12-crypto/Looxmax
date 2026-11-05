@@ -56,3 +56,23 @@ export const HT: React.FC<{x: number; s?: number; warn?: boolean; ok?: boolean; 
 };
 export const grow = (f: number, t: number, len = 10) => interpolate(f, [t, t + len], [0, 1], {...clamp, easing: ease});
 export const WRAP = '#f2efe6';
+
+/* ---- parts 1–3 helpers ---- */
+import {Cam} from '../engine/camera';
+import {L} from '../kit/core';
+import {mixCam} from '../kit/kit';
+import {STORY} from './config';
+export const camPath = (f: number, ks: [number, Cam][]): Cam => {
+	if (f <= ks[0][0]) return ks[0][1];
+	for (let i = 1; i < ks.length; i++) {
+		if (f <= ks[i][0]) return mixCam(ks[i - 1][1], ks[i][1], ease(Math.max(0, Math.min(1, (f - ks[i - 1][0]) / Math.max(1, ks[i][0] - ks[i - 1][0])))));
+	}
+	return ks[ks.length - 1][1];
+};
+// the plate over Mitya's head is on from the cold open to the rewind, then only from «Но пока проблема поменьше»
+export const plateOn = (gf: number) => gf < L('008').from + 70 || gf >= L('021').from + 95;
+export const Plate: React.FC<{x: number; yy?: number; s?: number; warn?: boolean; pop?: number}> = ({x, yy = 405, s = 2, warn, pop = 1}) => {
+	const {gf} = useShot();
+	return <Tag x={x} y={yy} value={counterAt(gf)} f={gf} s={s} pop={pop} heart={false} warn={warn} />;
+};
+export const label = STORY.counter?.label;
