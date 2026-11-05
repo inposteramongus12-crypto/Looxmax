@@ -6,9 +6,10 @@
 - [x] Проект и шаблон (engine, kit, tools, workflow, Root.tsx с таймаутом шрифтов, render.json), пробный кадр `Reference`.
 - [x] Общие помощники `Tag` / `Heart` / `heartColor` в `src/story/places.tsx`, `tsc --noEmit` без ошибок.
 - [x] План (11 частей), календарь, факты, чек-листы (10 пунктов из скилла и 11.4 — шесть пунктов).
-- [x] Сценарий `script.md`, части 1–11: **1686 слов, 10 429 знаков** озвученного текста (`node tools/count-script.mjs script.md`). Ориентир ≈ 11:30–12:00.
+- [x] Сценарий `script.md`, части 1–11: **1686 слов, 10 429 знаков** озвученного текста (`node tools/count-script.mjs script.md`). Ориентир ≈ 11:30–12:00; фактическая озвучка 12:20 без пауз.
 - [x] `src/story/lines.json` (187 реплик, `node tools/build-lines.mjs`) и `voices.json`: N George, HERO Liam, TEMA Will, GRANDPA Bill. `tools/eleven-voice.mjs` — три ключа (ELEVENLABS_API_KEY, _2, _3).
-- [ ] Озвучка ElevenLabs — только тесты по «да»; полная озвучка ждёт отдельного «да».
+- [x] Озвучка ElevenLabs: 187/187 реплик, `public/vo/NNN_SP.mp3`, общая длительность 12:20 (N 10:35, TEMA 0:50, HERO 0:36, GRANDPA 0:20). Знаков: ключ 2 — 4 083 (тесты 962 + 3 121), ключ 3 — 6 346; ключ 1 не использовался. Остаток: ключ 2 — 1, ключ 3 — 3 654. Команда: `node tools/eleven-voice.mjs --skip 1` (пропускает уже озвученные).
+- [ ] `timeline.json` (tools/prep-timeline.mjs) — не собирался, ждёт сцен.
 - [ ] `config.ts`, `cast.ts` под сюжет, `places.tsx`, сцены `shots*.tsx`, раскадровка — не начато.
 - [ ] Звук (`sound.json`), рендер, превью — не начато.
 
