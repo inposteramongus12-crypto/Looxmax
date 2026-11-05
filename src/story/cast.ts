@@ -21,7 +21,7 @@ export const CAST: Record<string, CastMember> = {
 	heroMess: {color: '#f2b21c', hair: 'spiky', hairColor: '#3a2a1c', rim: '#fff0cc', rimW: 2.4, sp: 'HERO'},
 	coach: {color: '#3a4256', outfit: 'tee', hair: 'cap', hairColor: '#c9342a', acc: ['mustache'], rim: '#e6ecff', rimW: 2.4, shoe: '#f2f2f2'},
 	seller: {color: '#3aa37a', outfit: 'apron', hair: 'bun', rim: '#e8fff2', rimW: 2.4, shoe: '#1d2b24'},
-	anya: {color: '#b05ad8', hair: 'ponytail', hairColor: '#e9b44c', rim: '#f3e6ff', rimW: 2.4, shoe: '#efe2ff'},
+	anya: {color: '#a6d94a', hair: 'ponytail', hairColor: '#e9b44c', rim: '#f4ffd8', rimW: 2.4, shoe: '#f2ffd8'},
 	aunt: {color: '#d9822b', outfit: 'coat', hair: 'bob', rim: '#fff0d8', rimW: 2.4, shoe: '#2b2f3a'},
 	kid: {color: '#4aa8d8', hair: 'spiky', hairColor: '#5a3a22', rim: '#e6f6ff', rimW: 2.4, shoe: '#f2f2f2'},
 };

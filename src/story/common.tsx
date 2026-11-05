@@ -95,14 +95,14 @@ export const Jacket: React.FC<{p: Pose; x: number; facing: 1 | -1; s?: number; s
 		const d = dirA(a[0] + a[1]);
 		const v: [number, number] = [d[0] * facing, d[1]];
 		const rot = (Math.atan2(v[1], v[0]) * 180) / Math.PI;
-		return {c: [q[0] - v[0] * 12 * s, q[1] + dy - v[1] * 12 * s], hand: [q[0] + v[0] * 20 * s, q[1] + dy + v[1] * 20 * s], rot};
+		return {c: [q[0] - v[0] * 22 * s, q[1] + dy - v[1] * 22 * s], hand: [q[0] + v[0] * 22 * s, q[1] + dy + v[1] * 22 * s], rot};
 	};
 	return (
 		<g>
 			{[arm(h.b, p.armB), arm(h.f, p.armF)].map((a, i) => (
 				<g key={i}>
-					<circle cx={a.hand[0]} cy={a.hand[1]} r={13 * s} fill="#ffe0bd" stroke="#10132a" strokeWidth={3.5} />
-					<rect x={-34 * s} y={-19 * s} width={68 * s} height={38 * s} rx={16 * s} fill={JACKET} stroke="#10132a" strokeWidth={4} transform={`translate(${a.c[0]},${a.c[1]}) rotate(${a.rot})`} />
+					<circle cx={a.hand[0]} cy={a.hand[1]} r={19 * s} fill="#ffe0bd" stroke="#10132a" strokeWidth={4} />
+					<rect x={-34 * s} y={-18 * s} width={62 * s} height={36 * s} rx={16 * s} fill={JACKET} stroke="#10132a" strokeWidth={4} transform={`translate(${a.c[0]},${a.c[1]}) rotate(${a.rot})`} />
 				</g>
 			))}
 			<g transform={`translate(${x + facing * 22 * s},${hip(s) + dy - 96 * s})`}>

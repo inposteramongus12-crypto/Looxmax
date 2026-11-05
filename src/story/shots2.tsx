@@ -11,23 +11,23 @@ import {Bubble, Board, FONT, HAND, AgeBadge} from '../kit/ui';
 import {Onoma} from '../reference/PauseTime';
 import {FL, HS, Plate, Screen, camPath, hands, hip} from './common';
 import {Face, Ico, Mini, Plaque, Ribbon, SchemeNote, WeekCal, Bathroom} from './places';
-import {KitchenK, Battery, BusStop, Bus, CarSide, Cat, Camera, DayCell, FloodField, Gym, Hall, RoadTrees, kk} from './places2';
+import {ClassroomClean, KitchenK, Battery, BusStop, Bus, CarSide, Cat, Camera, DayCell, FloodField, Gym, Hall, RoadTrees, kk} from './places2';
 
 /* ===== Parts 4–6 (lines 036–089) ===== */
 const WARM = {x: 20, y: 10, o: 0.4};
 const k = kk;
-const slouch = (p: Pose, a = 1): Pose => ({...p, lean: p.lean + 9 * a, head: p.head + 16 * a});
-const hipsPose = (p: Pose, a: number): Pose => reach(reach(p, 'F', [34, -26], a), 'B', [-28, -26], a);
-const Badge: React.FC<{y?: number}> = ({y = 180}) => {
+export const slouch = (p: Pose, a = 1): Pose => ({...p, lean: p.lean + 9 * a, head: p.head + 16 * a});
+export const hipsPose = (p: Pose, a: number): Pose => reach(reach(p, 'F', [34, -26], a), 'B', [-28, -26], a);
+export const Badge: React.FC<{y?: number}> = ({y = 180}) => {
 	const {gf} = useShot();
 	return <AgeBadge x={960} y={y} value={counterAt(gf)} s={2.0} label="СВОБОДНЫХ ВЕЧЕРОВ" />;
 };
-const Words: React.FC<{x: number; y: number; t: string; size?: number; c?: string}> = ({x, y, t, size = 84, c = '#fff'}) => (
+export const Words: React.FC<{x: number; y: number; t: string; size?: number; c?: string}> = ({x, y, t, size = 84, c = '#fff'}) => (
 	<text x={x} y={y} textAnchor="middle" fontSize={size} fontFamily={FONT} fontWeight={900} fill={c} stroke="#10132a" strokeWidth={size / 9} paintOrder="stroke">
 		{t}
 	</text>
 );
-const Drop: React.FC<{f: number; x: number; y: number; on: number}> = ({f, x, y, on}) => (
+export const Drop: React.FC<{f: number; x: number; y: number; on: number}> = ({f, x, y, on}) => (
 	<g opacity={on}>
 		{Array.from({length: 9}).map((_, i) => {
 			const u = ((f / 14 + i / 9) % 1);
@@ -35,7 +35,7 @@ const Drop: React.FC<{f: number; x: number; y: number; on: number}> = ({f, x, y,
 		})}
 	</g>
 );
-const Steam: React.FC<{x: number; y: number; f: number; z?: number}> = ({x, y, f, z = 1}) => (
+export const Steam: React.FC<{x: number; y: number; f: number; z?: number}> = ({x, y, f, z = 1}) => (
 	<g>
 		{[0, 1, 2, 3].map((i) => {
 			const u = ((f / 38 + i / 4) % 1);
@@ -76,7 +76,7 @@ const T1: React.FC = () => {
 /* ---- 038 · «жмёшь на сегодняшнюю клетку»: СР 3 FIFA, чирк ---- */
 const T2: React.FC = () => {
 	const {f, at} = useShot();
-	const burn = k(f, 94, 118);
+	const burn = k(f, 100, 124);
 	const tap = env(f, 70, 94, 10, 10);
 	return (
 		<Board tint="#1a2150">
@@ -86,7 +86,7 @@ const T2: React.FC = () => {
 				<circle r={60} fill="#fff" opacity={0.45} />
 				<circle r={26} fill="#fff" />
 			</g>
-			<Onoma x={1380} y={500} text="ЧИРК" t={f - 100} c="#ff9a6a" size={110} />
+			<Onoma x={1380} y={500} text="ЧИРК" t={f - 106} c="#ff9a6a" size={110} />
 		</Board>
 	);
 };
@@ -130,16 +130,16 @@ const T3: React.FC = () => {
 /* ---- 040 · суббота отдана: два улучшения — два вечера ---- */
 const T4: React.FC = () => {
 	const {f} = useShot();
-	const burn6 = k(f, 52, 76);
+	const burn6 = k(f, 58, 82);
 	const u = k(f, 120, 134);
 	return (
 		<Board tint="#1a2150">
 			<Badge />
 			<DayCell x={560} y={540} s={0.8} wd="СР" day={3} ico="pad" label="FIFA" burn={1} />
 			<DayCell x={1360} y={540} s={0.8} wd="СБ" day={6} ico="dice" label="НАСТОЛКИ" burn={burn6} flash={env(f, 50, 58, 3, 8)} />
-			<Onoma x={1460} y={380} text="ЧИРК" t={f - 58} c="#ff9a6a" size={100} />
+			<Onoma x={1460} y={380} text="ЧИРК" t={f - 81} c="#ff9a6a" size={100} />
 			<g opacity={u} transform={`translate(0,${(1 - u) * 20})`}>
-				<Plaque x={960} y={880} w={1400} h={120} text="2 УЛУЧШЕНИЯ = 2 ВЕЧЕРА" size={80} c="#5fe08a" />
+				<Plaque x={960} y={870} w={1560} h={140} text="2 УЛУЧШЕНИЯ = 2 ВЕЧЕРА" size={100} c="#10132a" fg="#10132a" fill="#5fe08a" />
 			</g>
 		</Board>
 	);
@@ -249,13 +249,16 @@ const T7: React.FC = () => {
 
 /* ---- 044 · полночь: четверг обугливается сам ---- */
 const T8: React.FC = () => {
-	const {f} = useShot();
+	const {f, gf} = useShot();
 	const burn = k(f, 90, 130);
 	const hand = interpolate(f, [0, 80], [-14, 0], {...clamp, easing: ease});
 	return (
 		<Board tint="#141a48">
-			<Badge />
-			<g transform="translate(520,610)">
+			<g transform={`translate(960,200) scale(${1 + 0.28 * Math.exp(-Math.max(0, f - 126) / 6) * (f >= 126 ? 1 : 0)})`}>
+				<AgeBadge x={0} y={0} value={counterAt(gf)} s={2.7} label="СВОБОДНЫХ ВЕЧЕРОВ" />
+			</g>
+			{f >= 126 && f < 170 ? <Words x={1560} y={150 - (f - 126) * 1.6} t="−1" size={150} c="#ff6a5a" /> : null}
+			<g transform="translate(520,660)">
 				<circle r={250} fill="#11142c" stroke="#ffd34a" strokeWidth={14} />
 				{Array.from({length: 12}).map((_, i) => (
 					<line key={i} x1={0} y1={-228} x2={0} y2={-198} stroke="#8a92d8" strokeWidth={8} transform={`rotate(${i * 30})`} />
@@ -266,7 +269,7 @@ const T8: React.FC = () => {
 					00:00
 				</text>
 			</g>
-			<DayCell x={1400} y={610} s={0.9} wd="ЧТ" day={4} ico="knight" label="ШАХМАТЫ" burn={burn} who={{c: '#6b7f8e', hair: '#d0d4dc'}} />
+			<DayCell x={1400} y={660} s={0.8} wd="ЧТ" day={4} ico="knight" label="ШАХМАТЫ" burn={burn} who={{c: '#6b7f8e', hair: '#d0d4dc'}} />
 		</Board>
 	);
 };
@@ -612,9 +615,9 @@ const T19: React.FC = () => {
 	return (
 		<Board tint="#1a2150">
 			<g opacity={u}>
-				<rect x={230} y={130} width={600} height={470} rx={30} fill="#fff6dc" stroke="#6aa8ff" strokeWidth={10} />
-				<Tired x={530} y={365} />
-				<Plaque x={530} y={680} w={640} h={110} text="ОБЫЧНЫЙ СОН" size={64} c="#6aa8ff" />
+				<rect x={160} y={110} width={760} height={470} rx={30} fill="#fff6dc" stroke="#6aa8ff" strokeWidth={10} />
+				<Tired x={540} y={345} />
+				<Plaque x={540} y={660} w={640} h={110} text="ОБЫЧНЫЙ СОН" size={64} c="#6aa8ff" />
 			</g>
 			<g opacity={v}>
 				<rect x={1090} y={130} width={600} height={470} rx={30} fill="#fff6dc" stroke="#ff9a3a" strokeWidth={10} />
@@ -647,9 +650,9 @@ const T20: React.FC = () => {
 				<text x={360} y={714} fontSize={58} fontFamily={FONT} fontWeight={800} fill="#fff">
 					после сна
 				</text>
-				<rect x={880} y={676} width={44} height={44} rx={10} fill="#ff9a3a" />
-				<text x={940} y={714} fontSize={58} fontFamily={FONT} fontWeight={800} fill="#fff">
-					после недосыпа
+				<rect x={780} y={676} width={44} height={44} rx={10} fill="#ff9a3a" />
+				<text x={840} y={714} fontSize={58} fontFamily={FONT} fontWeight={800} fill="#fff">
+					после короткой ночи
 				</text>
 			</g>
 			<g opacity={note}>
@@ -896,7 +899,7 @@ const T28: React.FC = () => {
 /* ---- 075 · день 11: дед и объявление ---- */
 const T29: React.FC = () => {
 	const {f, gf} = useShot();
-	const cam = camPath(f, [[0, camOn(900, 560, 1.1)], [130, camOn(1000, 520, 1.5)]]);
+	const cam = camPath(f, [[0, camOn(900, 580, 1.0)], [70, camOn(960, 560, 1.15)], [82, camOn(1180, 470, 2.0)], [150, camOn(1170, 470, 2.1)], [162, camOn(800, 540, 1.9)], [260, camOn(800, 530, 2.1)]]);
 	return (
 		<Stage cam={cam} bg="#e8dcc0" light={WARM}>
 			<Layer depth={1.6}>
@@ -924,7 +927,7 @@ const T29: React.FC = () => {
 const T30: React.FC = () => {
 	const {f, gf, at} = useShot();
 	const wave = env(f, 14, 70, 8, 8);
-	const cam = camPath(f, [[0, camOn(900, 580, 1.0)], [100, camOn(960, 560, 1.15)]]);
+	const cam = camPath(f, [[0, camOn(900, 580, 1.0)], [60, camOn(960, 570, 1.12)], [72, camOn(960, 540, 2.3)], [150, camOn(960, 530, 2.5)]]);
 	return (
 		<Stage cam={cam} bg="#9fd2f0" light={WARM}>
 			<Layer depth={1.6}>
@@ -988,22 +991,25 @@ const T31: React.FC = () => {
 
 /* ---- 080 · день 13: четыре вечера оптом ---- */
 const T32: React.FC = () => {
-	const {f} = useShot();
+	const {f, gf} = useShot();
 	const items = [
-		{d: 15, ico: 'ball' as IcoKindLocal, t: 'ПРОГУЛКИ', a: 100},
-		{d: 18, ico: 'knight' as IcoKindLocal, t: 'ШАГ И ЖЕСТЫ', a: 130},
-		{d: 19, ico: 'popcorn' as IcoKindLocal, t: 'ВЫХОД', a: 160},
-		{d: 20, ico: 'dice' as IcoKindLocal, t: 'ДИКЦИЯ', a: 190},
+		{d: 15, ico: 'ball' as IcoKindLocal, t: 'ПРОГУЛКИ', a: 106},
+		{d: 18, ico: 'knight' as IcoKindLocal, t: 'ШАГ И ЖЕСТЫ', a: 136},
+		{d: 19, ico: 'popcorn' as IcoKindLocal, t: 'ВЫХОД', a: 166},
+		{d: 20, ico: 'dice' as IcoKindLocal, t: 'ДИКЦИЯ', a: 196},
 	];
 	return (
 		<Board tint="#1a2150">
-			<Badge />
+			<g transform={`translate(960,200) scale(${1 + 0.3 * [106, 136, 166, 196].reduce((m, a) => Math.max(m, f >= a ? Math.exp(-(f - a) / 6) : 0), 0)})`}>
+				<AgeBadge x={0} y={0} value={counterAt(gf)} s={2.7} label="СВОБОДНЫХ ВЕЧЕРОВ" />
+			</g>
+			{[106, 136, 166, 196].map((a) => (f >= a && f < a + 28 ? <Words key={a} x={1660} y={170 - (f - a) * 1.5} t="−1" size={120} c="#ff6a5a" /> : null))}
 			{items.map((it, i) => {
-				const u = 0.45 + 0.55 * k(f, it.a - 40 + i * 4, it.a - 28 + i * 4);
-				const b = k(f, it.a + 4, it.a + 26);
+				const u = 0.45 + 0.55 * k(f, it.a - 60, it.a - 44);
+				const b = k(f, it.a, it.a + 18);
 				return (
 					<g key={i} opacity={u}>
-						<g transform={`translate(${360 + i * 400},600) scale(0.7)`}>
+						<g transform={`translate(${360 + i * 400},640) scale(0.7)`}>
 							<rect x={-250} y={-310} width={500} height={620} rx={40} fill="#fff6dc" stroke="#ffd34a" strokeWidth={10} />
 							<text y={-120} textAnchor="middle" fontSize={230} fontFamily={FONT} fontWeight={900} fill="#10132a">
 								{it.d}
@@ -1015,7 +1021,7 @@ const T32: React.FC = () => {
 							<rect x={-250} y={-310} width={500} height={620} rx={40} fill="#1a0f0f" opacity={0.88 * b} />
 							{b > 0.5 ? <path d="M-190,-250 L190,250 M190,-250 L-190,250" stroke="#ff6a3a" strokeWidth={18} strokeLinecap="round" /> : null}
 						</g>
-						<Onoma x={360 + i * 400} y={340} text="ЧИРК" t={f - it.a} c="#ff9a6a" size={80} />
+						<Onoma x={360 + i * 400} y={380} text="ЧИРК" t={f - it.a} c="#ff9a6a" size={80} />
 					</g>
 				);
 			})}
@@ -1123,7 +1129,7 @@ const T36: React.FC = () => {
 			</Layer>
 		</Stage>
 		<Screen>
-			<Plaque x={330} y={150} w={460} h={130} text="ДЕНЬ 15" size={90} c="#ffd34a" />
+			<Plaque x={400} y={170} w={460} h={130} text="ДЕНЬ 15" size={90} c="#ffd34a" />
 		</Screen>
 		</>
 	);
@@ -1155,7 +1161,7 @@ const T37: React.FC = () => {
 			</Layer>
 		</Stage>
 		<Screen>
-			<Plaque x={330} y={150} w={460} h={130} text="ДЕНЬ 18" size={90} c="#ffd34a" />
+			<Plaque x={400} y={170} w={460} h={130} text="ДЕНЬ 18" size={90} c="#ffd34a" />
 		</Screen>
 		</>
 	);
@@ -1164,7 +1170,7 @@ const T37: React.FC = () => {
 /* ---- 085 · день 19: Тёма в дверях, за спиной родственники ---- */
 const T38: React.FC = () => {
 	const {f, gf} = useShot();
-	const cam = camPath(f, [[0, camOn(960, 580, 1.0)], [100, camOn(960, 560, 1.25)]]);
+	const cam = camPath(f, [[0, camOn(1000, 580, 1.0)], [100, camOn(1000, 560, 1.1)]]);
 	return (
 		<>
 		<Stage cam={cam} bg="#e6d8bc" light={WARM}>
@@ -1173,17 +1179,17 @@ const T38: React.FC = () => {
 			</Layer>
 			<Layer depth={1.3}>
 				<Svg>
-					<CrowdRow n={6} x0={1150} x1={1820} floor={FL} s={0.92} mode="stand" seed="aunt" />
+					<CrowdRow n={6} x0={1080} x1={1600} floor={FL} s={0.92} mode="stand" seed="aunt" />
 				</Svg>
 			</Layer>
 			<Layer depth={1}>
 				<Svg>
-					<Actor who="tema" x={900} floor={FL} s={1.05} facing={1} faceTurn={0.4} look={[0.8, 0.1]} expr="worried" pose={gesture('shrug', idle(gf, 3), env(f, 24, 80, 8, 10), f)} uid="t50" />
+					<Actor who="tema" x={820} floor={FL} s={1.05} facing={1} faceTurn={0.4} look={[0.8, 0.1]} expr="worried" pose={gesture('shrug', idle(gf, 3), env(f, 24, 80, 8, 10), f)} uid="t50" />
 				</Svg>
 			</Layer>
 		</Stage>
 		<Screen>
-			<Plaque x={330} y={150} w={460} h={130} text="ДЕНЬ 19" size={90} c="#ffd34a" />
+			<Plaque x={400} y={170} w={460} h={130} text="ДЕНЬ 19" size={90} c="#ffd34a" />
 		</Screen>
 		</>
 	);
@@ -1230,7 +1236,7 @@ const T40: React.FC = () => {
 	return (
 		<Stage cam={cam} bg="#e9d9ae" light={WARM}>
 			<Layer depth={1.6}>
-				<ClassroomEve />
+				<ClassroomClean />
 			</Layer>
 			<Layer depth={1}>
 				<Svg>
@@ -1253,7 +1259,7 @@ const T41: React.FC = () => {
 		<>
 			<Stage cam={cam} bg="#e9d9ae" light={WARM}>
 				<Layer depth={1.6}>
-					<ClassroomEve />
+					<ClassroomClean />
 				</Layer>
 				<Layer depth={1}>
 					<Svg>

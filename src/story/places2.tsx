@@ -4,7 +4,7 @@ import {interpolate} from 'remotion';
 import {Svg} from '../engine/camera';
 import {clamp, ease} from '../kit/kit';
 import {FONT} from '../kit/ui';
-import {Kitchen} from '../kit/sets';
+import {ClassroomEve, Kitchen} from '../kit/sets';
 import {Wall, Ground, Ico, IcoKind, Mini, Plaque} from './places';
 
 export const kk = (f: number, a: number, b: number) => interpolate(f, [a, b], [0, 1], {...clamp, easing: ease});
@@ -184,9 +184,11 @@ export const Battery: React.FC<{x: number; y: number; s?: number; pct: number; l
 );
 
 /* карточка дня: день недели, число, значок, подпись; burn 0..1 — обугливается */
-export const DayCell: React.FC<{x: number; y: number; wd: string; day: number; ico: IcoKind; label: string; burn?: number; flash?: number; s?: number; who?: {c: string; hair: string}}> = ({x, y, wd, day, ico, label, burn = 0, flash = 0, s = 1, who}) => (
+export const DayCell: React.FC<{x: number; y: number; wd: string; day: number; ico: IcoKind; label: string; burn?: number; flash?: number; s?: number; who?: {c: string; hair: string}; dual?: boolean; smolder?: number}> = ({x, y, wd, day, ico, label, burn = 0, flash = 0, s = 1, who, dual, smolder = 0}) => (
 	<g transform={`translate(${x},${y}) scale(${s * (1 + 0.06 * flash)})`}>
 		<rect x={-250} y={-310} width={500} height={620} rx={40} fill="#fff6dc" stroke={flash > 0.1 ? '#ff9a3a' : '#ffd34a'} strokeWidth={10} />
+		{dual ? <path d="M0,-310 H210 Q250,-310 250,-270 V270 Q250,310 210,310 H0 Z" fill="#bff0cf" /> : null}
+		{smolder > 0 ? <rect x={-250} y={-310} width={500} height={620} rx={40} fill="none" stroke="#ff6a3a" strokeWidth={14 + 10 * smolder} opacity={0.5 + 0.4 * Math.sin(smolder * 60)} style={{filter: 'blur(3px)'}} /> : null}
 		<text x={-130} y={-190} textAnchor="middle" fontSize={84} fontFamily={FONT} fontWeight={900} fill="#10132a">
 			{wd}
 		</text>
@@ -219,6 +221,17 @@ export const KitchenK: React.FC<{night?: boolean}> = ({night}) => (
 			<path d="M236,612 L204,572 L218,562 L246,590 Z" fill="#8c96ad" stroke="#10132a" strokeWidth={5} />
 			<path d="M252,566 Q297,505 346,566" fill="none" stroke="#10132a" strokeWidth={12} strokeLinecap="round" />
 			<circle cx={296} cy={552} r={9} fill="#10132a" />
+		</Svg>
+	</>
+);
+
+/* the classroom with a clean blackboard (the kit one has a PTA-meeting caption) */
+export const ClassroomClean: React.FC = () => (
+	<>
+		<ClassroomEve />
+		<Svg>
+			<rect x={216} y={156} width={868} height={368} fill="#2f4a3a" />
+			<path d="M300,420 H520 M600,300 L760,300" stroke="#f6f2e4" strokeWidth={5} opacity={0.35} />
 		</Svg>
 	</>
 );

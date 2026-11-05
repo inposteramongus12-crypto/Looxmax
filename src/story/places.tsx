@@ -327,9 +327,9 @@ export const Ribbon: React.FC<{t: number; burned: number[]; cursor: number; mine
 			{cursor > 0 ? (() => {
 				const p = cell(cursor);
 				return (
-					<g transform={`translate(${p.x + 50},${p.y - 24})`}>
+					<g transform={cursor > 15 ? `translate(${p.x + 50},${p.y + 154}) scale(1,-1)` : `translate(${p.x + 50},${p.y - 24})`}>
 						<path d="M-18,-28 L0,0 L18,-28 Z" fill="#5fe08a" />
-						<text y={-40} textAnchor="middle" fontSize={58} fontFamily={FONT} fontWeight={900} fill="#5fe08a" stroke="#10132a" strokeWidth={8} paintOrder="stroke">
+						<text y={cursor > 15 ? 100 : -40} transform={cursor > 15 ? 'scale(1,-1)' : undefined} textAnchor="middle" fontSize={58} fontFamily={FONT} fontWeight={900} fill="#5fe08a" stroke="#10132a" strokeWidth={8} paintOrder="stroke">
 							СЕГОДНЯ
 						</text>
 					</g>
@@ -340,9 +340,9 @@ export const Ribbon: React.FC<{t: number; burned: number[]; cursor: number; mine
 	);
 };
 
-export const Plaque: React.FC<{x: number; y: number; w: number; h: number; text: string; c?: string; size?: number; fg?: string}> = ({x, y, w, h, text, c = '#ffd34a', size = 64, fg = '#fff'}) => (
+export const Plaque: React.FC<{x: number; y: number; w: number; h: number; text: string; c?: string; size?: number; fg?: string; fill?: string}> = ({x, y, w, h, text, c = '#ffd34a', size = 64, fg = '#fff', fill = '#11142c'}) => (
 	<g transform={`translate(${x},${y})`}>
-		<rect x={-w / 2} y={-h / 2} width={w} height={h} rx={h / 2.4} fill="#11142c" stroke={c} strokeWidth={6} />
+		<rect x={-w / 2} y={-h / 2} width={w} height={h} rx={h / 2.4} fill={fill} stroke={c} strokeWidth={6} />
 		<text y={size * 0.35} textAnchor="middle" fontSize={size} fontFamily={FONT} fontWeight={900} fill={fg}>
 			{text}
 		</text>
